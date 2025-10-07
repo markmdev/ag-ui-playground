@@ -1,0 +1,19 @@
+.copilotKitMessages,
+.copilotKitInput,
+.copilotKitMessage {
+  font-family: "Courier New", monospace;
+  font-size: 14px;
+}
+
+.copilotKitUserMessage,
+.copilotKitAssistantMessage {
+  border-radius: 8px;
+}
+
+.copilotKitMessages {
+  padding: 8px;
+}
+
+.copilotKitInput {
+  padding: 8px;
+}

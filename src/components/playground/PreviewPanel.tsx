@@ -1,281 +1,62 @@
 "use client";
 
-import { useMemo, useState, type CSSProperties } from "react";
-import {
-  CopilotChat,
-  type InputProps,
-  type RenderSuggestionsListProps,
-  useChatContext,
-} from "@copilotkit/react-ui";
-import type { PlaygroundConfig } from "@/lib/playground-config";
-import { buildCssVariables } from "@/lib/playground-config";
-import type { PlaygroundDensity } from "@/lib/playground-config";
+import { useEffect, useRef, useState } from "react";
+import { PlaygroundConfig } from "@/types/playground";
 
-export interface PreviewPanelProps {
+interface PreviewPanelProps {
   config: PlaygroundConfig;
+  onExport: () => void;
 }
 
-export const PreviewPanel = ({ config }: PreviewPanelProps) => {
-  const fallbackSuggestions = useMemo(
-    () =>
-      config.startScreen.starterPrompts.map((prompt) => ({
-        title: prompt,
-        message: prompt,
-      })),
-    [config.startScreen.starterPrompts],
-  );
+export function PreviewPanel({ config, onExport }: PreviewPanelProps) {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [isReady, setIsReady] = useState(false);
 
-  const styleVariables = useMemo(
-    () =>
-      ({
-        ...buildCssVariables(config),
-        "--playground-radius":
-          radiusToPixels[config.style.radius] ?? radiusToPixels.medium,
-        "--playground-density":
-          densityToPadding[config.style.density] ?? densityToPadding.normal,
-        "--playground-density-gap":
-          densityToGap[config.style.density] ?? densityToGap.normal,
-      }) as CSSProperties,
-    [config],
-  );
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.type === "PREVIEW_READY") {
+        setIsReady(true);
+      }
+    };
 
-  const surfaceBackground =
-    config.colorScheme === "light"
-      ? "linear-gradient(180deg, #f8fafc 0%, #eef2ff 60%, #e2e8f0 100%)"
-      : "linear-gradient(180deg, #0f172a 0%, #111827 60%, #0b1120 100%)";
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
-  return (
-    <section className="flex flex-1 flex-col bg-neutral-100">
-      <header className="flex items-center justify-between border-b border-neutral-200 bg-white/80 px-8 py-6 backdrop-blur">
-        <div>
-          <h2 className="text-sm font-semibold text-neutral-700">
-            Watch chat examples
-          </h2>
-          <p className="text-xs text-neutral-500">
-            Live CopilotKit preview updates with every change.
-          </p>
-        </div>
-        <div className="hidden text-xs text-neutral-400 md:block">
-          {config.typography.fontFamily} · {config.typography.fontSize} ·{" "}
-          {config.style.radius} radius
-        </div>
-      </header>
-
-      <div className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-4 pb-8 pt-6 sm:px-8">
-        <div
-          className="relative flex w-full max-w-[520px] flex-1 flex-col rounded-[36px] bg-white p-6 sm:p-8 shadow-2xl ring-1 ring-black/5"
-          style={{
-            background: surfaceBackground,
-          }}
-        >
-          <div className="absolute inset-0 -z-10 rounded-[36px] bg-gradient-to-br from-white/40 via-white/10 to-black/10 blur-3xl" />
-          <div
-            className="playground-preview relative flex-1 overflow-hidden rounded-[28px] border border-neutral-200 bg-white shadow-lg"
-            style={styleVariables}
-          >
-            {(config.options.modelPicker ||
-              config.options.toolMenu.searchDocs ||
-              config.options.toolMenu.createTheme) && (
-              <div className="pointer-events-none absolute inset-x-4 top-4 flex items-center justify-between text-[11px] uppercase tracking-wider text-neutral-400">
-                {config.options.modelPicker ? (
-                  <div
-                    className="pointer-events-auto rounded-full bg-neutral-900 px-3 py-1 text-[11px] font-medium text-white shadow"
-                    style={{ backgroundColor: config.accentColor }}
-                  >
-                    Model · gpt-4o-mini
-                  </div>
-                ) : (
-                  <span />
-                )}
-                <div className="flex gap-2">
-                  {config.options.toolMenu.searchDocs && (
-                    <span className="rounded-full border border-neutral-300 bg-white/90 px-3 py-1 text-[11px] font-medium text-neutral-500 shadow-sm">
-                      Search docs
-                    </span>
-                  )}
-                  {config.options.toolMenu.createTheme && (
-                    <span className="rounded-full border border-neutral-300 bg-white/90 px-3 py-1 text-[11px] font-medium text-neutral-500 shadow-sm">
-                      Create theme
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-            <CopilotChat
-              className="playground-preview-chat"
-              labels={{
-                title: "Playground Copilot",
-                placeholder: config.composer.placeholder,
-                initial: config.startScreen.greeting,
-              }}
-              imageUploadsEnabled={config.composer.attachments}
-              RenderSuggestionsList={(props) => (
-                <PreviewSuggestions
-                  {...props}
-                  fallback={fallbackSuggestions}
-                />
-              )}
-              Input={(props) => (
-                <PreviewComposer
-                  {...props}
-                  disclaimer={config.composer.disclaimer}
-                  density={config.style.density}
-                  attachmentsEnabled={config.composer.attachments}
-                />
-              )}
-            />
-            {(config.options.messageActions.copy ||
-              config.options.messageActions.share) && (
-              <div className="pointer-events-none absolute bottom-4 right-4 flex gap-2 text-[11px] font-medium text-neutral-400">
-                {config.options.messageActions.copy && (
-                  <span className="rounded-full bg-neutral-900/10 px-3 py-1">
-                    Copy action
-                  </span>
-                )}
-                {config.options.messageActions.share && (
-                  <span className="rounded-full bg-neutral-900/10 px-3 py-1">
-                    Share action
-                  </span>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-interface PreviewComposerProps extends InputProps {
-  disclaimer: string;
-  density: PlaygroundDensity;
-  attachmentsEnabled: boolean;
-}
-
-const PreviewComposer = ({
-  disclaimer,
-  density,
-  attachmentsEnabled,
-  inProgress,
-  hideStopButton,
-  onSend,
-  onStop,
-  onUpload,
-}: PreviewComposerProps) => {
-  const [draft, setDraft] = useState("");
-  const context = useChatContext();
-
-  const sendMessage = async () => {
-    if (!draft.trim()) {
-      return;
+  useEffect(() => {
+    if (isReady && iframeRef.current?.contentWindow) {
+      iframeRef.current.contentWindow.postMessage(
+        {
+          type: "UPDATE_CONFIG",
+          config,
+        },
+        "*"
+      );
     }
-    await onSend(draft.trim());
-    setDraft("");
-  };
-
-  const canSend = draft.trim().length > 0 && !inProgress;
-  const canStop = inProgress && !hideStopButton;
+  }, [config, isReady]);
 
   return (
-    <div
-      className="flex flex-col gap-2"
-      style={{ padding: densityToComposerPadding[density] ?? "1rem" }}
-    >
-      <div className="flex items-start gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 shadow-sm">
-        <textarea
-          value={draft}
-          onChange={(event) => setDraft(event.target.value)}
-          placeholder={context.labels.placeholder}
-          rows={2}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" && !event.shiftKey) {
-              event.preventDefault();
-              if (canSend) {
-                void sendMessage();
-              }
-            }
-          }}
-          className="min-h-[48px] flex-1 resize-none bg-transparent text-sm text-neutral-800 outline-none"
-        />
-        <div className="flex flex-col items-end gap-3">
-          {attachmentsEnabled && onUpload ? (
-            <button
-              type="button"
-              onClick={onUpload}
-              className="rounded-full border border-neutral-200 bg-white px-2 py-1 text-xs text-neutral-500 transition hover:text-neutral-800"
-            >
-              Attach
-            </button>
-          ) : null}
-          <button
-            type="button"
-            disabled={!canSend && !canStop}
-            onClick={canStop ? onStop : sendMessage}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-900 text-white transition hover:bg-neutral-700 disabled:bg-neutral-200"
-          >
-            {canStop ? "■" : context.icons.sendIcon}
-          </button>
+    <div className="flex-1 flex flex-col h-screen bg-gray-100">
+      <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-gray-900">Preview</h2>
+        <button
+          onClick={onExport}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+        >
+          Export Code
+        </button>
+      </div>
+
+      <div className="flex-1 p-6">
+        <div className="h-full bg-white rounded-lg shadow-lg overflow-hidden">
+          <iframe
+            ref={iframeRef}
+            src="/preview"
+            className="w-full h-full border-0"
+            title="CopilotChat Preview"
+          />
         </div>
       </div>
-      {disclaimer ? (
-        <p className="px-1 text-xs text-neutral-400">{disclaimer}</p>
-      ) : null}
     </div>
   );
-};
-
-interface PreviewSuggestionsProps extends RenderSuggestionsListProps {
-  fallback: Array<{ title: string; message: string }>;
 }
-
-const PreviewSuggestions = ({
-  suggestions,
-  onSuggestionClick,
-  fallback,
-}: PreviewSuggestionsProps) => {
-  const items = suggestions.length > 0 ? suggestions : fallback;
-
-  if (items.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className="playground-suggestions flex flex-wrap gap-2 px-4 pb-1 pt-2">
-      {items.map((item, index) => (
-        <button
-          key={`${item.message}-${index}`}
-          type="button"
-          onClick={() => onSuggestionClick(item.message)}
-          className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-600 transition hover:border-neutral-300 hover:text-neutral-900"
-        >
-          {item.title}
-        </button>
-      ))}
-    </div>
-  );
-};
-
-const radiusToPixels: Record<string, string> = {
-  none: "0px",
-  small: "12px",
-  medium: "22px",
-  pill: "32px",
-};
-
-const densityToPadding: Record<string, string> = {
-  compact: "0.65rem",
-  normal: "0.85rem",
-  comfortable: "1.15rem",
-};
-
-const densityToGap: Record<string, string> = {
-  compact: "0.65rem",
-  normal: "0.9rem",
-  comfortable: "1.25rem",
-};
-
-const densityToComposerPadding: Record<PlaygroundDensity, string> = {
-  compact: "0.6rem 0.65rem 0.75rem",
-  normal: "0.85rem 0.9rem 1rem",
-  comfortable: "1.15rem 1.2rem 1.25rem",
-};

@@ -2,6 +2,6 @@
 
 import { PlaygroundContainer } from "@/components/playground/PlaygroundContainer";
 
-export default function CopilotKitPlaygroundPage() {
+export default function HomePage() {
   return <PlaygroundContainer />;
 }
