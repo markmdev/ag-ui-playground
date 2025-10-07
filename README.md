@@ -2,6 +2,8 @@
 
 A visual playground for customizing CopilotKit chat components. Adjust colors, fonts, and text, then export production-ready code.
 
+![Demo Gif](docs/demo.gif)
+
 ## Overview
 
 This tool lets you customize CopilotKit chat appearance with a live preview and export the code when you're done. Useful for designers and developers who want to integrate AI chat into their applications.
@@ -38,6 +40,7 @@ This starts the UI on `localhost:3000` and the agent on `localhost:8123`. Open y
 4. Copy the generated files into your project
 
 The export includes:
+
 - `MyChat.tsx` - Your customized chat component
 - `layout.tsx` - CopilotKit wrapper
 - `route.ts` - API route
@@ -87,6 +90,7 @@ agent/
 ### Preview not loading
 
 The preview needs the agent running. Check:
+
 - Agent is running on port 8123
 - OpenAI API key is set in `agent/.env`
 - No console errors in browser
