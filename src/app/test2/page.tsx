@@ -9,17 +9,7 @@ export default function MyChat() {
       display: flex;
       flex-direction: column;
       overflow: scroll;
-      border-radius: 16px !important;
-    }
-
-    .chat-container .copilotKitMessages {
-      flex: 1 1 auto;
-      min-height: 0;
-      overflow-y: auto;
-    }
-
-    .chat-container .copilotKitInput {
-      flex: 0 0 auto;
+      border-radius: 8px !important;
     }
 
     /* Typography */
@@ -28,23 +18,31 @@ export default function MyChat() {
     .copilotKitUserMessage,
     .copilotKitAssistantMessage,
     .copilotKitMarkdownElement {
-      font-family: 'Times New Roman', serif !important;
-      font-size: 18px !important;
+      font-family: system-ui, -apple-system, sans-serif !important;
+      font-size: 14px !important;
     }
 
     /* Border radius for message bubbles */
     .copilotKitUserMessage,
     .copilotKitAssistantMessage {
-      border-radius: 16px !important;
+      border-radius: 8px !important;
     }
 
     /* Padding */
     .copilotKitMessages {
-      padding: 20px !important;
+      padding: 16px !important;
     }
 
     .copilotKitInput {
-      padding: 20px !important;
+      padding: 16px !important;
+      background-color: #1e3513 !important;
+    }
+
+    .copilotKitInput input,
+    .copilotKitInput textarea,
+    .copilotKitInput [contenteditable] {
+      background-color: #1e3513 !important;
+      color: #f63600 !important;
     }
 
     .copilotKitChat {
@@ -55,32 +53,32 @@ export default function MyChat() {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: customStyles }} />
-      <CopilotKit runtimeUrl="/api/copilotkit" agent="sample_agent">
-        <div className="h-[700px] w-1/2">
-          <div
-            className="chat-container"
-            style={
-              {
-                "--copilot-kit-primary-color": "#6366f1",
-                "--copilot-kit-contrast-color": "#ffffff",
-                "--copilot-kit-background-color": "#e9f2ff",
-                "--copilot-kit-secondary-color": "#f3f4f6",
-                "--copilot-kit-secondary-contrast-color": "#1f2937",
-                "--copilot-kit-separator-color": "#ea8398",
-                "--copilot-kit-muted-color": "#9ca3af",
-              } as CopilotKitCSSProperties
-            }
-          >
-            <CopilotChat
-              labels={{
-                title: "My Assistant",
-                initial: "Hi! How can I help you today?",
-                placeholder: "Type your message...",
-              }}
-            />
-          </div>
+      {/* <CopilotKit runtimeUrl="/api/copilotkit" agent="agent_es"> */}
+      <div className="w-1/2 h-[500px]">
+        <div
+          className="chat-container"
+          style={
+            {
+              "--copilot-kit-primary-color": "#3bed00",
+              "--copilot-kit-contrast-color": "#ea0d00",
+              "--copilot-kit-background-color": "#4e004e",
+              "--copilot-kit-secondary-color": "#344e20",
+              "--copilot-kit-secondary-contrast-color": "#f63600",
+              "--copilot-kit-separator-color": "#07bb00",
+              "--copilot-kit-muted-color": "#6673ab",
+            } as CopilotKitCSSProperties
+          }
+        >
+          <CopilotChat
+            labels={{
+              title: "My Assistant",
+              initial: "Hi! How can I help you today?",
+              placeholder: "Type your message...",
+            }}
+          />
         </div>
-      </CopilotKit>
+      </div>
+      {/* </CopilotKit> */}
     </>
   );
 }

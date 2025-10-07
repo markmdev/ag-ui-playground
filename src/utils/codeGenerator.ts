@@ -4,14 +4,14 @@ export type ExportFormat = "props" | "css" | "hybrid";
 
 export interface ExportedFiles {
   component: string;
+  layout: string;
   apiRoute: string;
   envVars: string;
 }
 
 export function generateExportFiles(config: PlaygroundConfig): ExportedFiles {
   // Extract individual parts from hybrid code
-  const reactCode = `import { CopilotKit } from "@copilotkit/react-core";
-import { CopilotChat, CopilotKitCSSProperties } from "@copilotkit/react-ui";
+  const reactCode = `import { CopilotChat, CopilotKitCSSProperties } from "@copilotkit/react-ui";
 import "@copilotkit/react-ui/styles.css";
 
 export default function MyChat() {
@@ -22,16 +22,6 @@ export default function MyChat() {
       flex-direction: column;
       overflow: scroll;
       border-radius: ${config.style.borderRadius} !important;
-    }
-
-    .chat-container .copilotKitMessages {
-      flex: 1 1 auto;
-      min-height: 0;
-      overflow-y: auto;
-    }
-
-    .chat-container .copilotKitInput {
-      flex: 0 0 auto;
     }
 
     /* Typography */
@@ -75,28 +65,26 @@ export default function MyChat() {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: customStyles }} />
-      <CopilotKit runtimeUrl="/api/copilotkit" agent="${config.agentConfig.agentName}">
-        <div
-          className="chat-container"
-          style={{
-            "--copilot-kit-primary-color": "${config.colors.primary}",
-            "--copilot-kit-contrast-color": "${config.colors.contrast}",
-            "--copilot-kit-background-color": "${config.colors.background}",
-            "--copilot-kit-secondary-color": "${config.colors.secondary}",
-            "--copilot-kit-secondary-contrast-color": "${config.colors.secondaryContrast}",
-            "--copilot-kit-separator-color": "${config.colors.separator}",
-            "--copilot-kit-muted-color": "${config.colors.muted}",
-          } as CopilotKitCSSProperties}
-        >
-          <CopilotChat
-            labels={{
-              title: "${config.labels.title}",
-              initial: "${config.labels.initial}",
-              placeholder: "${config.labels.placeholder}",
-            }}
-          />
-        </div>
-      </CopilotKit>
+      <div
+        className="chat-container"
+        style={{
+          "--copilot-kit-primary-color": "${config.colors.primary}",
+          "--copilot-kit-contrast-color": "${config.colors.contrast}",
+          "--copilot-kit-background-color": "${config.colors.background}",
+          "--copilot-kit-secondary-color": "${config.colors.secondary}",
+          "--copilot-kit-secondary-contrast-color": "${config.colors.secondaryContrast}",
+          "--copilot-kit-separator-color": "${config.colors.separator}",
+          "--copilot-kit-muted-color": "${config.colors.muted}",
+        } as CopilotKitCSSProperties}
+      >
+        <CopilotChat
+          labels={{
+            title: "${config.labels.title}",
+            initial: "${config.labels.initial}",
+            placeholder: "${config.labels.placeholder}",
+          }}
+        />
+      </div>
     </>
   );
 }`;
@@ -131,12 +119,33 @@ export const POST = async (req: NextRequest) => {
   return handleRequest(req);
 };`;
 
+  const layoutCode = `import { CopilotKit } from "@copilotkit/react-core";
+  import "./globals.css";
+import "@copilotkit/react-ui/styles.css";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <CopilotKit runtimeUrl="/api/copilotkit" agent="${config.agentConfig.agentName}">
+          {children}
+        </CopilotKit>
+      </body>
+    </html>
+  );
+}`;
+
   const envFileCode = `LANGGRAPH_DEPLOYMENT_URL=${config.agentConfig.agUiUrl}
 LANGGRAPH_GRAPH_ID=${config.agentConfig.agentName}
 LANGSMITH_API_KEY=`;
 
   return {
     component: reactCode,
+    layout: layoutCode,
     apiRoute: apiRouteCode,
     envVars: envFileCode,
   };

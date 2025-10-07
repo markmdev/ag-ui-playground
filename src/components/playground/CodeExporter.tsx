@@ -13,6 +13,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface CodeExporterProps {
   config: PlaygroundConfig;
@@ -34,7 +35,7 @@ export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col p-0 gap-0">
+      <DialogContent className="max-w-7xl max-h-[90vh] flex flex-col p-0 gap-0">
         <DialogHeader className="px-6 pt-6 pb-3 border-b">
           <DialogTitle className="text-xl">Export Code</DialogTitle>
           <DialogDescription className="text-xs">
@@ -42,26 +43,136 @@ export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
           </DialogDescription>
         </DialogHeader>
 
-        {/* Instructions */}
-        <Card className="mx-6 mt-4 bg-accent/50 border-accent shadow-none">
-          <CardContent className="p-4">
-            <h3 className="font-semibold mb-2 text-sm flex items-center gap-2">
+        {/* Collapsible Instructions */}
+        <Accordion type="multiple" defaultValue={["install"]} className="mx-6 mt-4">
+          {/* Installation */}
+          <AccordionItem value="install" className="border rounded-lg px-4 bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-900">
+            <AccordionTrigger className="text-sm font-semibold hover:no-underline py-3">
+              📦 Installation
+            </AccordionTrigger>
+            <AccordionContent className="pb-3">
+              <p className="text-xs text-muted-foreground mb-2">
+                Install required dependencies:
+              </p>
+              <div className="relative">
+                <pre className="bg-muted/50 border px-3 py-2 rounded text-xs font-mono overflow-x-auto pr-16">
+                  <code>npm install @ag-ui/langgraph@0.0.7 @copilotkit/react-core@1.9.3 @copilotkit/react-ui@1.9.3 @copilotkit/runtime@1.9.3</code>
+                </pre>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleCopy("npm install @ag-ui/langgraph@0.0.7 @copilotkit/react-core@1.9.3 @copilotkit/react-ui@1.9.3 @copilotkit/runtime@1.9.3")}
+                  className="absolute top-2 right-2 h-6 text-xs px-2 bg-background shadow-sm"
+                >
+                  {copied ? "✓" : "Copy"}
+                </Button>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* Setup Instructions */}
+          <AccordionItem value="setup" className="border rounded-lg px-4 mt-2 bg-accent/50 border-accent">
+            <AccordionTrigger className="text-sm font-semibold hover:no-underline py-3">
               📋 Setup Instructions
-            </h3>
-            <ol className="text-xs space-y-1.5 text-muted-foreground leading-relaxed">
-              <li>1. Create <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">MyChat.tsx</code> and paste the component code</li>
-              <li>2. <span className="font-semibold text-destructive">⚠️ Replace</span> <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">app/api/copilotkit/route.ts</code> with the API route code</li>
-              <li>3. Add environment variables to <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">.env.local</code></li>
-            </ol>
-          </CardContent>
-        </Card>
+            </AccordionTrigger>
+            <AccordionContent className="pb-3">
+              <ol className="text-xs space-y-1.5 text-muted-foreground leading-relaxed">
+                <li>
+                  1. Create{" "}
+                  <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">
+                    components/MyChat.tsx
+                  </code>{" "}
+                  and paste the component code
+                </li>
+                <li className="flex items-start gap-1">
+                  <span>2.</span>
+                  <span>
+                    <span className="font-semibold text-primary">🔧 Important:</span> Wrap your app
+                    with CopilotKit in{" "}
+                    <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">
+                      app/layout.tsx
+                    </code>
+                  </span>
+                </li>
+                <li>
+                  3. <span className="font-semibold text-destructive">⚠️ Replace or Create</span>{" "}
+                  <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">
+                    app/api/copilotkit/route.ts
+                  </code>{" "}
+                  with the API route code
+                </li>
+                <li>
+                  4. Add environment variables to{" "}
+                  <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">.env.local</code>
+                </li>
+              </ol>
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* Usage */}
+          <AccordionItem value="usage" className="border rounded-lg px-4 mt-2 bg-primary/5 border-primary/20">
+            <AccordionTrigger className="text-sm font-semibold hover:no-underline py-3">
+              💡 Using Your Component
+            </AccordionTrigger>
+            <AccordionContent className="pb-3">
+              <p className="text-xs text-muted-foreground leading-relaxed mb-2">
+                After completing setup, you can import and use{" "}
+                <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">
+                  &lt;MyChat /&gt;
+                </code>{" "}
+                anywhere in your application.
+              </p>
+              <div className="relative">
+                <pre className="mt-2 bg-muted/50 border px-2 py-1.5 rounded text-xs font-mono pr-14">
+                  <code>import MyChat from '@/components/MyChat'</code>
+                </pre>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleCopy("import MyChat from '@/components/MyChat'")}
+                  className="absolute top-2 right-1 h-5 text-[10px] px-1.5 bg-background shadow-sm"
+                >
+                  {copied ? "✓" : "Copy"}
+                </Button>
+              </div>
+              <div className="relative">
+                <pre className="mt-2 bg-muted/50 border px-2 py-1.5 rounded text-xs font-mono pr-14">
+                  <code>{`<div className="w-1/2 max-h-[400px]">
+  <MyChat />
+</div>`}</code>
+                </pre>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleCopy(`<div className="w-1/2 max-h-[400px]">\n  <MyChat />\n</div>`)}
+                  className="absolute top-2 right-1 h-5 text-[10px] px-1.5 bg-background shadow-sm"
+                >
+                  {copied ? "✓" : "Copy"}
+                </Button>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
         {/* File Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col px-6 pb-6 pt-4 overflow-hidden">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="flex-1 flex flex-col px-6 pb-6 pt-4 overflow-hidden"
+        >
           <TabsList className="w-full justify-start h-9">
-            <TabsTrigger value="component" className="text-xs">MyChat.tsx</TabsTrigger>
-            <TabsTrigger value="apiRoute" className="text-xs">route.ts</TabsTrigger>
-            <TabsTrigger value="envVars" className="text-xs">.env.local</TabsTrigger>
+            <TabsTrigger value="component" className="text-xs">
+              MyChat.tsx
+            </TabsTrigger>
+            <TabsTrigger value="layout" className="text-xs">
+              layout.tsx
+            </TabsTrigger>
+            <TabsTrigger value="apiRoute" className="text-xs">
+              route.ts
+            </TabsTrigger>
+            <TabsTrigger value="envVars" className="text-xs">
+              .env.local
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="component" className="flex-1 mt-3 overflow-auto">
@@ -73,6 +184,22 @@ export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
                 size="sm"
                 variant="default"
                 onClick={() => handleCopy(files.component)}
+                className="absolute top-3 right-3 h-7 text-xs"
+              >
+                {copied ? "✓ Copied!" : "Copy"}
+              </Button>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="layout" className="flex-1 mt-3 overflow-auto">
+            <div className="relative">
+              <pre className="bg-muted/50 border text-foreground p-4 rounded-lg overflow-x-auto text-xs font-mono leading-relaxed">
+                <code>{files.layout}</code>
+              </pre>
+              <Button
+                size="sm"
+                variant="default"
+                onClick={() => handleCopy(files.layout)}
                 className="absolute top-3 right-3 h-7 text-xs"
               >
                 {copied ? "✓ Copied!" : "Copy"}

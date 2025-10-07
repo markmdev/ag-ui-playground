@@ -12,8 +12,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 interface SettingsPanelProps {
   config: PlaygroundConfig;
@@ -37,7 +37,7 @@ export function SettingsPanel({
   onReset,
 }: SettingsPanelProps) {
   return (
-    <div className="w-80 h-screen border-r bg-muted/20">
+    <div className="w-96 h-screen border-r bg-muted/20">
       <div className="flex items-center justify-between p-6 border-b bg-background/50 backdrop-blur-sm">
         <h2 className="text-lg font-semibold">Settings</h2>
         <Button variant="outline" size="sm" onClick={onReset}>
@@ -45,16 +45,14 @@ export function SettingsPanel({
         </Button>
       </div>
       <ScrollArea className="h-[calc(100vh-73px)]">
-        <div className="p-4 space-y-4">
+        <div className="px-4 py-6 space-y-6">
           {/* Agent Configuration Section */}
-          <Card className="shadow-sm border-muted/50">
-            <CardHeader className="pb-0">
-              <CardTitle className="text-base">Agent Configuration</CardTitle>
-              <CardDescription className="text-xs">Configure your agent settings</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4 pt-0">
-              <div className="space-y-1.5">
-                <Label htmlFor="agUiUrl" className="text-xs font-medium">
+          <div>
+            <h3 className="text-sm font-semibold mb-1">Agent Configuration</h3>
+            <p className="text-xs text-muted-foreground mb-4">Configure your agent settings</p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <Label htmlFor="agUiUrl" className="text-xs font-medium whitespace-nowrap">
                   AG-UI URL
                 </Label>
                 <Input
@@ -63,12 +61,12 @@ export function SettingsPanel({
                   value={config.agentConfig.agUiUrl}
                   onChange={(e) => onUpdateAgentConfig("agUiUrl", e.target.value)}
                   placeholder="http://localhost:8123"
-                  className="h-9 text-sm"
+                  className="h-7 w-48"
                 />
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="agentName" className="text-xs font-medium">
+              <div className="flex items-center justify-between gap-3">
+                <Label htmlFor="agentName" className="text-xs font-medium whitespace-nowrap">
                   Agent Name
                 </Label>
                 <Input
@@ -77,21 +75,21 @@ export function SettingsPanel({
                   value={config.agentConfig.agentName}
                   onChange={(e) => onUpdateAgentConfig("agentName", e.target.value)}
                   placeholder="sample_agent"
-                  className="h-9 text-sm"
+                  className="h-7 w-48"
                 />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+
+          <Separator />
 
           {/* Text Customization Section */}
-          <Card className="shadow-sm border-muted/50">
-            <CardHeader className="pb-0">
-              <CardTitle className="text-base">Text</CardTitle>
-              <CardDescription className="text-xs">Customize chat text and labels</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4 pt-0">
-              <div className="space-y-1.5">
-                <Label htmlFor="title" className="text-xs font-medium">
+          <div>
+            <h3 className="text-sm font-semibold mb-1">Text</h3>
+            <p className="text-xs text-muted-foreground mb-4">Customize chat text and labels</p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <Label htmlFor="title" className="text-xs font-medium whitespace-nowrap">
                   Title
                 </Label>
                 <Input
@@ -99,25 +97,25 @@ export function SettingsPanel({
                   type="text"
                   value={config.labels.title}
                   onChange={(e) => onUpdateLabel("title", e.target.value)}
-                  className="h-9 text-sm"
+                  className="h-7 w-48"
                 />
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="initial" className="text-xs font-medium">
+              <div className="flex items-center justify-between gap-3">
+                <Label htmlFor="initial" className="text-xs font-medium whitespace-nowrap">
                   Initial Message
                 </Label>
                 <Textarea
                   id="initial"
                   value={config.labels.initial}
                   onChange={(e) => onUpdateLabel("initial", e.target.value)}
-                  rows={3}
-                  className="text-sm resize-none"
+                  rows={2}
+                  className="text-[10px] resize-none w-48 py-1.5"
                 />
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="placeholder" className="text-xs font-medium">
+              <div className="flex items-center justify-between gap-3">
+                <Label htmlFor="placeholder" className="text-xs font-medium whitespace-nowrap">
                   Placeholder
                 </Label>
                 <Input
@@ -125,28 +123,28 @@ export function SettingsPanel({
                   type="text"
                   value={config.labels.placeholder}
                   onChange={(e) => onUpdateLabel("placeholder", e.target.value)}
-                  className="h-9 text-sm"
+                  className="h-7 w-48"
                 />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+
+          <Separator />
 
           {/* Color Scheme Section */}
-          <Card className="shadow-sm border-muted/50">
-            <CardHeader className="pb-0">
-              <CardTitle className="text-base">Colors</CardTitle>
-              <CardDescription className="text-xs">Customize the color scheme</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4 pt-0">
-              <div className="space-y-1.5">
-                <Label htmlFor="colorScheme" className="text-xs font-medium">
+          <div>
+            <h3 className="text-sm font-semibold mb-1">Colors</h3>
+            <p className="text-xs text-muted-foreground mb-4">Customize the color scheme</p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <Label htmlFor="colorScheme" className="text-xs font-medium whitespace-nowrap">
                   Color Scheme
                 </Label>
                 <Select
                   value={config.colorScheme}
                   onValueChange={(value) => onUpdateColorScheme(value as "light" | "dark")}
                 >
-                  <SelectTrigger id="colorScheme" className="h-9 text-sm">
+                  <SelectTrigger id="colorScheme" className="h-7 w-48">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -196,25 +194,25 @@ export function SettingsPanel({
                 value={config.colors.muted}
                 onChange={(value) => onUpdateColor("muted", value)}
               />
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+
+          <Separator />
 
           {/* Typography Section */}
-          <Card className="shadow-sm border-muted/50">
-            <CardHeader className="pb-0">
-              <CardTitle className="text-base">Typography</CardTitle>
-              <CardDescription className="text-xs">Adjust font settings</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4 pt-0">
-              <div className="space-y-1.5">
-                <Label htmlFor="fontFamily" className="text-xs font-medium">
+          <div>
+            <h3 className="text-sm font-semibold mb-1">Typography</h3>
+            <p className="text-xs text-muted-foreground mb-4">Adjust font settings</p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <Label htmlFor="fontFamily" className="text-xs font-medium whitespace-nowrap">
                   Font Family
                 </Label>
                 <Select
                   value={config.typography.fontFamily}
                   onValueChange={(value) => onUpdateTypography("fontFamily", value)}
                 >
-                  <SelectTrigger id="fontFamily" className="h-9 text-sm">
+                  <SelectTrigger id="fontFamily" className="h-7 w-48">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -227,15 +225,15 @@ export function SettingsPanel({
                 </Select>
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="fontSize" className="text-xs font-medium">
+              <div className="flex items-center justify-between gap-3">
+                <Label htmlFor="fontSize" className="text-xs font-medium whitespace-nowrap">
                   Font Size
                 </Label>
                 <Select
                   value={config.typography.fontSize}
                   onValueChange={(value) => onUpdateTypography("fontSize", value)}
                 >
-                  <SelectTrigger id="fontSize" className="h-9 text-sm">
+                  <SelectTrigger id="fontSize" className="h-7 w-48">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -246,25 +244,25 @@ export function SettingsPanel({
                   </SelectContent>
                 </Select>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+
+          <Separator />
 
           {/* Style Section */}
-          <Card className="shadow-sm border-muted/50">
-            <CardHeader className="pb-0">
-              <CardTitle className="text-base">Style</CardTitle>
-              <CardDescription className="text-xs">Customize visual styling</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4 pt-0">
-              <div className="space-y-1.5">
-                <Label htmlFor="borderRadius" className="text-xs font-medium">
+          <div>
+            <h3 className="text-sm font-semibold mb-1">Style</h3>
+            <p className="text-xs text-muted-foreground mb-4">Customize visual styling</p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <Label htmlFor="borderRadius" className="text-xs font-medium whitespace-nowrap">
                   Border Radius
                 </Label>
                 <Select
                   value={config.style.borderRadius}
                   onValueChange={(value) => onUpdateStyle("borderRadius", value)}
                 >
-                  <SelectTrigger id="borderRadius" className="h-9 text-sm">
+                  <SelectTrigger id="borderRadius" className="h-7 w-48">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -277,15 +275,15 @@ export function SettingsPanel({
                 </Select>
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="padding" className="text-xs font-medium">
+              <div className="flex items-center justify-between gap-3">
+                <Label htmlFor="padding" className="text-xs font-medium whitespace-nowrap">
                   Padding
                 </Label>
                 <Select
                   value={config.style.padding}
                   onValueChange={(value) => onUpdateStyle("padding", value)}
                 >
-                  <SelectTrigger id="padding" className="h-9 text-sm">
+                  <SelectTrigger id="padding" className="h-7 w-48">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -297,15 +295,18 @@ export function SettingsPanel({
                 </Select>
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="bubbleBorderRadius" className="text-xs font-medium">
-                  Bubble Border Radius
+              <div className="flex items-center justify-between gap-3">
+                <Label
+                  htmlFor="bubbleBorderRadius"
+                  className="text-xs font-medium whitespace-nowrap"
+                >
+                  Bubble Radius
                 </Label>
                 <Select
                   value={config.style.bubbleBorderRadius}
                   onValueChange={(value) => onUpdateStyle("bubbleBorderRadius", value)}
                 >
-                  <SelectTrigger id="bubbleBorderRadius" className="h-9 text-sm">
+                  <SelectTrigger id="bubbleBorderRadius" className="h-7 w-48">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -317,8 +318,8 @@ export function SettingsPanel({
                   </SelectContent>
                 </Select>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </ScrollArea>
     </div>
@@ -336,20 +337,20 @@ function ColorInput({
   onChange: (value: string) => void;
 }) {
   return (
-    <div className="space-y-1.5">
-      <Label className="text-xs font-medium">{label}</Label>
-      <div className="flex gap-2">
+    <div className="flex items-center justify-between gap-3">
+      <Label className="text-xs font-medium whitespace-nowrap">{label}</Label>
+      <div className="flex gap-2 w-48">
         <input
           type="color"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="h-9 w-14 rounded-md border border-input cursor-pointer bg-background"
+          className="h-8 w-10 rounded-md border border-input cursor-pointer bg-background flex-shrink-0"
         />
         <Input
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="flex-1 h-9 text-sm font-mono"
+          className="flex-1 h-7 font-mono"
         />
       </div>
     </div>
