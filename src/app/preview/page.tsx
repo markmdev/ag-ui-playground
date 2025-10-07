@@ -80,7 +80,16 @@ export default function PreviewPage() {
       border-radius:${config.style.bubbleBorderRadius}!important;
     }
     .copilotKitMessages{padding:${config.style.padding}!important;}
-    .copilotKitInput{padding:${config.style.padding}!important;}
+    .copilotKitInput{
+      padding:${config.style.padding}!important;
+      background-color:${config.colors.inputBackground}!important;
+    }
+    .copilotKitInput input,
+    .copilotKitInput textarea,
+    .copilotKitInput [contenteditable]{
+      background-color:${config.colors.inputBackground}!important;
+      color:${config.colors.secondaryContrast}!important;
+    }
 
     /* NEW: layout so only the message list scrolls */
     html, body { height:100%; }

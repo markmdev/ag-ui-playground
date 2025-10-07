@@ -15,6 +15,7 @@ export function PlaygroundContainer() {
     updateColor,
     updateTypography,
     updateStyle,
+    updateColorScheme,
     resetConfig,
   } = usePlaygroundConfig();
 
@@ -28,6 +29,7 @@ export function PlaygroundContainer() {
           onUpdateColor={updateColor}
           onUpdateTypography={updateTypography}
           onUpdateStyle={updateStyle}
+          onUpdateColorScheme={updateColorScheme}
           onReset={resetConfig}
         />
         <PreviewPanel config={config} onExport={() => setIsExportOpen(true)} />

@@ -12,11 +12,15 @@ export interface PlaygroundConfig {
     placeholder: string;
   };
 
+  // Color scheme
+  colorScheme: "light" | "dark";
+
   // Color scheme (CSS variables)
   colors: {
     primary: string;
     contrast: string;
     background: string;
+    inputBackground: string;
     secondary: string;
     secondaryContrast: string;
     separator: string;
@@ -37,6 +41,29 @@ export interface PlaygroundConfig {
   };
 }
 
+export const COLOR_SCHEMES = {
+  light: {
+    primary: "#6366f1",
+    contrast: "#ffffff",
+    background: "#ffffff",
+    inputBackground: "#ffffff",
+    secondary: "#f3f4f6",
+    secondaryContrast: "#1f2937",
+    separator: "#e5e7eb",
+    muted: "#9ca3af",
+  },
+  dark: {
+    primary: "#818cf8",
+    contrast: "#ffffff",
+    background: "#1f2937",
+    inputBackground: "#1f2937",
+    secondary: "#374151",
+    secondaryContrast: "#f9fafb",
+    separator: "#4b5563",
+    muted: "#9ca3af",
+  },
+};
+
 export const DEFAULT_CONFIG: PlaygroundConfig = {
   agentConfig: {
     agUiUrl: "http://localhost:8123",
@@ -47,15 +74,8 @@ export const DEFAULT_CONFIG: PlaygroundConfig = {
     initial: "Hi! How can I help you today?",
     placeholder: "Type your message...",
   },
-  colors: {
-    primary: "#6366f1",
-    contrast: "#ffffff",
-    background: "#ffffff",
-    secondary: "#f3f4f6",
-    secondaryContrast: "#1f2937",
-    separator: "#e5e7eb",
-    muted: "#9ca3af",
-  },
+  colorScheme: "light",
+  colors: COLOR_SCHEMES.light,
   typography: {
     fontFamily: "system-ui, -apple-system, sans-serif",
     fontSize: "14px",

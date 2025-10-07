@@ -4,7 +4,13 @@ import { PlaygroundConfig } from "@/types/playground";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -16,6 +22,7 @@ interface SettingsPanelProps {
   onUpdateColor: (key: keyof PlaygroundConfig["colors"], value: string) => void;
   onUpdateTypography: (key: keyof PlaygroundConfig["typography"], value: string) => void;
   onUpdateStyle: (key: keyof PlaygroundConfig["style"], value: string) => void;
+  onUpdateColorScheme: (scheme: "light" | "dark") => void;
   onReset: () => void;
 }
 
@@ -26,6 +33,7 @@ export function SettingsPanel({
   onUpdateColor,
   onUpdateTypography,
   onUpdateStyle,
+  onUpdateColorScheme,
   onReset,
 }: SettingsPanelProps) {
   return (
@@ -38,16 +46,17 @@ export function SettingsPanel({
       </div>
       <ScrollArea className="h-[calc(100vh-73px)]">
         <div className="p-4 space-y-4">
-
           {/* Agent Configuration Section */}
           <Card className="shadow-sm border-muted/50">
-            <CardHeader className="pb-3">
+            <CardHeader className="pb-0">
               <CardTitle className="text-base">Agent Configuration</CardTitle>
               <CardDescription className="text-xs">Configure your agent settings</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4 pt-4">
+            <CardContent className="space-y-4 pt-0">
               <div className="space-y-1.5">
-                <Label htmlFor="agUiUrl" className="text-xs font-medium">AG-UI URL</Label>
+                <Label htmlFor="agUiUrl" className="text-xs font-medium">
+                  AG-UI URL
+                </Label>
                 <Input
                   id="agUiUrl"
                   type="text"
@@ -59,7 +68,9 @@ export function SettingsPanel({
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="agentName" className="text-xs font-medium">Agent Name</Label>
+                <Label htmlFor="agentName" className="text-xs font-medium">
+                  Agent Name
+                </Label>
                 <Input
                   id="agentName"
                   type="text"
@@ -74,13 +85,15 @@ export function SettingsPanel({
 
           {/* Text Customization Section */}
           <Card className="shadow-sm border-muted/50">
-            <CardHeader className="pb-3">
+            <CardHeader className="pb-0">
               <CardTitle className="text-base">Text</CardTitle>
               <CardDescription className="text-xs">Customize chat text and labels</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4 pt-4">
+            <CardContent className="space-y-4 pt-0">
               <div className="space-y-1.5">
-                <Label htmlFor="title" className="text-xs font-medium">Title</Label>
+                <Label htmlFor="title" className="text-xs font-medium">
+                  Title
+                </Label>
                 <Input
                   id="title"
                   type="text"
@@ -91,7 +104,9 @@ export function SettingsPanel({
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="initial" className="text-xs font-medium">Initial Message</Label>
+                <Label htmlFor="initial" className="text-xs font-medium">
+                  Initial Message
+                </Label>
                 <Textarea
                   id="initial"
                   value={config.labels.initial}
@@ -102,7 +117,9 @@ export function SettingsPanel({
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="placeholder" className="text-xs font-medium">Placeholder</Label>
+                <Label htmlFor="placeholder" className="text-xs font-medium">
+                  Placeholder
+                </Label>
                 <Input
                   id="placeholder"
                   type="text"
@@ -116,18 +133,36 @@ export function SettingsPanel({
 
           {/* Color Scheme Section */}
           <Card className="shadow-sm border-muted/50">
-            <CardHeader className="pb-3">
+            <CardHeader className="pb-0">
               <CardTitle className="text-base">Colors</CardTitle>
               <CardDescription className="text-xs">Customize the color scheme</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4 pt-4">
+            <CardContent className="space-y-4 pt-0">
+              <div className="space-y-1.5">
+                <Label htmlFor="colorScheme" className="text-xs font-medium">
+                  Color Scheme
+                </Label>
+                <Select
+                  value={config.colorScheme}
+                  onValueChange={(value) => onUpdateColorScheme(value as "light" | "dark")}
+                >
+                  <SelectTrigger id="colorScheme" className="h-9 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="light">Light</SelectItem>
+                    <SelectItem value="dark">Dark</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               <ColorInput
-                label="Primary"
+                label="User Message Bubble"
                 value={config.colors.primary}
                 onChange={(value) => onUpdateColor("primary", value)}
               />
               <ColorInput
-                label="Contrast"
+                label="User Message Text"
                 value={config.colors.contrast}
                 onChange={(value) => onUpdateColor("contrast", value)}
               />
@@ -137,22 +172,27 @@ export function SettingsPanel({
                 onChange={(value) => onUpdateColor("background", value)}
               />
               <ColorInput
+                label="Input Background"
+                value={config.colors.inputBackground}
+                onChange={(value) => onUpdateColor("inputBackground", value)}
+              />
+              <ColorInput
                 label="Secondary"
                 value={config.colors.secondary}
                 onChange={(value) => onUpdateColor("secondary", value)}
               />
               <ColorInput
-                label="Secondary Contrast"
+                label="Assistant Message Text"
                 value={config.colors.secondaryContrast}
                 onChange={(value) => onUpdateColor("secondaryContrast", value)}
               />
               <ColorInput
-                label="Separator"
+                label="Border"
                 value={config.colors.separator}
                 onChange={(value) => onUpdateColor("separator", value)}
               />
               <ColorInput
-                label="Muted"
+                label="Additional Elements"
                 value={config.colors.muted}
                 onChange={(value) => onUpdateColor("muted", value)}
               />
@@ -161,14 +201,19 @@ export function SettingsPanel({
 
           {/* Typography Section */}
           <Card className="shadow-sm border-muted/50">
-            <CardHeader className="pb-3">
+            <CardHeader className="pb-0">
               <CardTitle className="text-base">Typography</CardTitle>
               <CardDescription className="text-xs">Adjust font settings</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4 pt-4">
+            <CardContent className="space-y-4 pt-0">
               <div className="space-y-1.5">
-                <Label htmlFor="fontFamily" className="text-xs font-medium">Font Family</Label>
-                <Select value={config.typography.fontFamily} onValueChange={(value) => onUpdateTypography("fontFamily", value)}>
+                <Label htmlFor="fontFamily" className="text-xs font-medium">
+                  Font Family
+                </Label>
+                <Select
+                  value={config.typography.fontFamily}
+                  onValueChange={(value) => onUpdateTypography("fontFamily", value)}
+                >
                   <SelectTrigger id="fontFamily" className="h-9 text-sm">
                     <SelectValue />
                   </SelectTrigger>
@@ -183,8 +228,13 @@ export function SettingsPanel({
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="fontSize" className="text-xs font-medium">Font Size</Label>
-                <Select value={config.typography.fontSize} onValueChange={(value) => onUpdateTypography("fontSize", value)}>
+                <Label htmlFor="fontSize" className="text-xs font-medium">
+                  Font Size
+                </Label>
+                <Select
+                  value={config.typography.fontSize}
+                  onValueChange={(value) => onUpdateTypography("fontSize", value)}
+                >
                   <SelectTrigger id="fontSize" className="h-9 text-sm">
                     <SelectValue />
                   </SelectTrigger>
@@ -201,14 +251,19 @@ export function SettingsPanel({
 
           {/* Style Section */}
           <Card className="shadow-sm border-muted/50">
-            <CardHeader className="pb-3">
+            <CardHeader className="pb-0">
               <CardTitle className="text-base">Style</CardTitle>
               <CardDescription className="text-xs">Customize visual styling</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4 pt-4">
+            <CardContent className="space-y-4 pt-0">
               <div className="space-y-1.5">
-                <Label htmlFor="borderRadius" className="text-xs font-medium">Border Radius</Label>
-                <Select value={config.style.borderRadius} onValueChange={(value) => onUpdateStyle("borderRadius", value)}>
+                <Label htmlFor="borderRadius" className="text-xs font-medium">
+                  Border Radius
+                </Label>
+                <Select
+                  value={config.style.borderRadius}
+                  onValueChange={(value) => onUpdateStyle("borderRadius", value)}
+                >
                   <SelectTrigger id="borderRadius" className="h-9 text-sm">
                     <SelectValue />
                   </SelectTrigger>
@@ -223,8 +278,13 @@ export function SettingsPanel({
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="padding" className="text-xs font-medium">Padding</Label>
-                <Select value={config.style.padding} onValueChange={(value) => onUpdateStyle("padding", value)}>
+                <Label htmlFor="padding" className="text-xs font-medium">
+                  Padding
+                </Label>
+                <Select
+                  value={config.style.padding}
+                  onValueChange={(value) => onUpdateStyle("padding", value)}
+                >
                   <SelectTrigger id="padding" className="h-9 text-sm">
                     <SelectValue />
                   </SelectTrigger>
@@ -238,8 +298,13 @@ export function SettingsPanel({
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="bubbleBorderRadius" className="text-xs font-medium">Bubble Border Radius</Label>
-                <Select value={config.style.bubbleBorderRadius} onValueChange={(value) => onUpdateStyle("bubbleBorderRadius", value)}>
+                <Label htmlFor="bubbleBorderRadius" className="text-xs font-medium">
+                  Bubble Border Radius
+                </Label>
+                <Select
+                  value={config.style.bubbleBorderRadius}
+                  onValueChange={(value) => onUpdateStyle("bubbleBorderRadius", value)}
+                >
                   <SelectTrigger id="bubbleBorderRadius" className="h-9 text-sm">
                     <SelectValue />
                   </SelectTrigger>

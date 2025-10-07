@@ -57,6 +57,14 @@ export default function MyChat() {
 
     .copilotKitInput {
       padding: ${config.style.padding} !important;
+      background-color: ${config.colors.inputBackground} !important;
+    }
+
+    .copilotKitInput input,
+    .copilotKitInput textarea,
+    .copilotKitInput [contenteditable] {
+      background-color: ${config.colors.inputBackground} !important;
+      color: ${config.colors.secondaryContrast} !important;
     }
 
     .copilotKitChat {
