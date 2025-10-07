@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { PlaygroundConfig } from "@/types/playground";
-import { generateCode, ExportFormat } from "@/utils/codeGenerator";
+import { generateExportFiles } from "@/utils/codeGenerator";
 
 interface CodeExporterProps {
   config: PlaygroundConfig;
@@ -10,14 +10,27 @@ interface CodeExporterProps {
   onClose: () => void;
 }
 
+type FileTab = "component" | "apiRoute" | "envVars";
+
 export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
-  const [format, setFormat] = useState<ExportFormat>("hybrid");
+  const [activeTab, setActiveTab] = useState<FileTab>("component");
   const [copied, setCopied] = useState(false);
 
-  const code = generateCode(config, format);
+  const files = generateExportFiles(config);
+
+  const getCurrentCode = () => {
+    switch (activeTab) {
+      case "component":
+        return files.component;
+      case "apiRoute":
+        return files.apiRoute;
+      case "envVars":
+        return files.envVars;
+    }
+  };
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(code);
+    await navigator.clipboard.writeText(getCurrentCode());
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -40,38 +53,48 @@ export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
           </button>
         </div>
 
-        {/* Format Tabs */}
+        {/* Instructions */}
+        <div className="px-6 py-4 bg-blue-50 border-b border-blue-100">
+          <h3 className="font-semibold text-blue-900 mb-2 text-sm">Setup Instructions:</h3>
+          <ol className="text-sm text-blue-800 space-y-1">
+            <li>1. Create <code className="bg-blue-100 px-1.5 py-0.5 rounded text-xs">MyChat.tsx</code> and paste the component code</li>
+            <li>2. <span className="font-semibold text-red-700">⚠️ Replace</span> <code className="bg-blue-100 px-1.5 py-0.5 rounded text-xs">app/api/copilotkit/route.ts</code> with the API route code</li>
+            <li>3. Add environment variables to <code className="bg-blue-100 px-1.5 py-0.5 rounded text-xs">.env.local</code></li>
+          </ol>
+        </div>
+
+        {/* File Tabs */}
         <div className="px-6 pt-4 border-b border-gray-200">
           <div className="flex gap-2">
             <button
-              onClick={() => setFormat("hybrid")}
+              onClick={() => setActiveTab("component")}
               className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
-                format === "hybrid"
+                activeTab === "component"
                   ? "bg-blue-600 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              Hybrid (Recommended)
+              MyChat.tsx
             </button>
             <button
-              onClick={() => setFormat("props")}
+              onClick={() => setActiveTab("apiRoute")}
               className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
-                format === "props"
+                activeTab === "apiRoute"
                   ? "bg-blue-600 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              Props Only
+              route.ts
             </button>
             <button
-              onClick={() => setFormat("css")}
+              onClick={() => setActiveTab("envVars")}
               className={`px-4 py-2 text-sm font-medium rounded-t-md transition-colors ${
-                format === "css"
+                activeTab === "envVars"
                   ? "bg-blue-600 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              CSS Only
+              .env.local
             </button>
           </div>
         </div>
@@ -80,7 +103,7 @@ export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
         <div className="flex-1 overflow-auto p-6">
           <div className="relative">
             <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
-              <code>{code}</code>
+              <code>{getCurrentCode()}</code>
             </pre>
             <button
               onClick={handleCopy}
@@ -88,35 +111,6 @@ export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
             >
               {copied ? "Copied!" : "Copy"}
             </button>
-          </div>
-
-          {/* Instructions */}
-          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <h3 className="font-semibold text-blue-900 mb-2">How to use:</h3>
-            <ul className="text-sm text-blue-800 space-y-1">
-              {format === "hybrid" && (
-                <>
-                  <li>1. Copy the React component code and CSS code separately</li>
-                  <li>2. Create a new file (e.g., <code className="bg-blue-100 px-1 rounded">MyChat.tsx</code>) and paste the React code</li>
-                  <li>3. Create a CSS file (e.g., <code className="bg-blue-100 px-1 rounded">custom-copilot.css</code>) and paste the CSS code</li>
-                  <li>4. Import and use the component in your app</li>
-                </>
-              )}
-              {format === "props" && (
-                <>
-                  <li>1. Copy the code above</li>
-                  <li>2. Create a new component file and paste the code</li>
-                  <li>3. Import and use it in your app</li>
-                </>
-              )}
-              {format === "css" && (
-                <>
-                  <li>1. Copy the CSS code above</li>
-                  <li>2. Add it to your global CSS file or create a separate CSS file</li>
-                  <li>3. Import the CSS file in your app</li>
-                </>
-              )}
-            </ul>
           </div>
         </div>
 

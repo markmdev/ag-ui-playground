@@ -4,6 +4,7 @@ import { PlaygroundConfig } from "@/types/playground";
 
 interface SettingsPanelProps {
   config: PlaygroundConfig;
+  onUpdateAgentConfig: (key: keyof PlaygroundConfig["agentConfig"], value: string) => void;
   onUpdateLabel: (key: keyof PlaygroundConfig["labels"], value: string) => void;
   onUpdateColor: (key: keyof PlaygroundConfig["colors"], value: string) => void;
   onUpdateTypography: (key: keyof PlaygroundConfig["typography"], value: string) => void;
@@ -13,6 +14,7 @@ interface SettingsPanelProps {
 
 export function SettingsPanel({
   config,
+  onUpdateAgentConfig,
   onUpdateLabel,
   onUpdateColor,
   onUpdateTypography,
@@ -30,6 +32,39 @@ export function SettingsPanel({
           Reset
         </button>
       </div>
+
+      {/* Agent Configuration Section */}
+      <section className="mb-8">
+        <h3 className="text-sm font-semibold text-gray-700 mb-4">Agent Configuration</h3>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">
+              AG-UI URL
+            </label>
+            <input
+              type="text"
+              value={config.agentConfig.agUiUrl}
+              onChange={(e) => onUpdateAgentConfig("agUiUrl", e.target.value)}
+              placeholder="http://localhost:8123"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">
+              Agent Name
+            </label>
+            <input
+              type="text"
+              value={config.agentConfig.agentName}
+              onChange={(e) => onUpdateAgentConfig("agentName", e.target.value)}
+              placeholder="sample_agent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+      </section>
 
       {/* Text Customization Section */}
       <section className="mb-8">

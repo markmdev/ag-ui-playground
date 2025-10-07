@@ -1,19 +1,40 @@
+.chat-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+}
+
+.chat-container .copilotKitMessages {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.chat-container .copilotKitInput {
+  flex: 0 0 auto;
+}
+
+/* Typography */
 .copilotKitMessages,
 .copilotKitInput,
-.copilotKitMessage {
-  font-family: "Courier New", monospace;
-  font-size: 14px;
-}
-
 .copilotKitUserMessage,
 .copilotKitAssistantMessage {
-  border-radius: 8px;
+  font-family: system-ui, -apple-system, sans-serif !important;
+  font-size: 14px !important;
 }
 
+/* Border radius for message bubbles */
+.copilotKitUserMessage,
+.copilotKitAssistantMessage {
+  border-radius: 8px !important;
+}
+
+/* Padding */
 .copilotKitMessages {
-  padding: 8px;
+  padding: 16px !important;
 }
 
 .copilotKitInput {
-  padding: 8px;
+  padding: 16px !important;
 }

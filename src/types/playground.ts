@@ -1,4 +1,10 @@
 export interface PlaygroundConfig {
+  // Agent configuration
+  agentConfig: {
+    agUiUrl: string;
+    agentName: string;
+  };
+
   // Text customization
   labels: {
     title: string;
@@ -31,6 +37,10 @@ export interface PlaygroundConfig {
 }
 
 export const DEFAULT_CONFIG: PlaygroundConfig = {
+  agentConfig: {
+    agUiUrl: "http://localhost:8123",
+    agentName: "sample_agent",
+  },
   labels: {
     title: "My Assistant",
     initial: "Hi! How can I help you today?",

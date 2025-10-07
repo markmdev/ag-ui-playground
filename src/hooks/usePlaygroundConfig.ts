@@ -58,6 +58,19 @@ export function usePlaygroundConfig() {
     []
   );
 
+  const updateAgentConfig = useCallback(
+    (key: keyof PlaygroundConfig["agentConfig"], value: string) => {
+      setConfig((prev) => ({
+        ...prev,
+        agentConfig: {
+          ...prev.agentConfig,
+          [key]: value,
+        },
+      }));
+    },
+    []
+  );
+
   const resetConfig = useCallback(() => {
     setConfig(DEFAULT_CONFIG);
   }, []);
@@ -68,6 +81,7 @@ export function usePlaygroundConfig() {
     updateColor,
     updateTypography,
     updateStyle,
+    updateAgentConfig,
     resetConfig,
   };
 }

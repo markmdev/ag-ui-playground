@@ -10,6 +10,7 @@ export function PlaygroundContainer() {
   const [isExportOpen, setIsExportOpen] = useState(false);
   const {
     config,
+    updateAgentConfig,
     updateLabel,
     updateColor,
     updateTypography,
@@ -22,6 +23,7 @@ export function PlaygroundContainer() {
       <div className="flex h-screen">
         <SettingsPanel
           config={config}
+          onUpdateAgentConfig={updateAgentConfig}
           onUpdateLabel={updateLabel}
           onUpdateColor={updateColor}
           onUpdateTypography={updateTypography}

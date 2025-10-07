@@ -1,60 +1,55 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CopilotChat, CopilotKitCSSProperties } from "@copilotkit/react-ui";
 import { PlaygroundConfig } from "@/types/playground";
 
 export default function PreviewPage() {
   const [config, setConfig] = useState<PlaygroundConfig | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Listen for config updates from parent window
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data.type === "UPDATE_CONFIG") {
-        setConfig(event.data.config);
-      }
+    const onMsg = (e: MessageEvent) => {
+      if (e.data?.type === "UPDATE_CONFIG") setConfig(e.data.config);
     };
-
-    window.addEventListener("message", handleMessage);
-
-    // Signal to parent that iframe is ready
+    window.addEventListener("message", onMsg);
     window.parent.postMessage({ type: "PREVIEW_READY" }, "*");
 
-    return () => window.removeEventListener("message", handleMessage);
+    // important: fill the iframe and avoid body growing
+    document.documentElement.style.cssText = "margin:0; padding:0; overflow:scroll; height:100%;";
+    document.body.style.cssText = "margin:0; padding:0; overflow:scroll; height:100%;";
+
+    return () => window.removeEventListener("message", onMsg);
+  }, []);
+
+  // optional: if you are still auto-resizing the iframe from inside,
+  // clamp the posted height so it never exceeds the iframe viewport
+  useEffect(() => {
+    const send = () => {
+      const h = Math.min(
+        Math.ceil(
+          Math.max(document.documentElement.scrollHeight, document.documentElement.clientHeight)
+        ),
+        window.innerHeight
+      );
+      window.parent.postMessage({ type: "IFRAME_HEIGHT", height: h }, "*");
+    };
+    requestAnimationFrame(send);
+    window.addEventListener("resize", send);
+    return () => window.removeEventListener("resize", send);
   }, []);
 
   if (!config) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center bg-gray-100">
-        <p className="text-gray-500">Loading preview...</p>
+      <div ref={rootRef} style={{ padding: 16, display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", flexDirection: "column", gap: "12px" }}>
+        <div style={{ fontSize: "14px", color: "#6b7280" }}>Loading preview...</div>
+        <div style={{ fontSize: "12px", color: "#9ca3af", maxWidth: "400px", textAlign: "center" }}>
+          Make sure your AG-UI agent is running at the configured URL
+        </div>
       </div>
     );
   }
 
-  // Generate custom CSS for typography and style
-  const customStyles = `
-    .copilotKitMessages,
-    .copilotKitInput,
-    .copilotKitMessage {
-      font-family: ${config.typography.fontFamily};
-      font-size: ${config.typography.fontSize};
-    }
-
-    .copilotKitUserMessage,
-    .copilotKitAssistantMessage {
-      border-radius: ${config.style.borderRadius};
-    }
-
-    .copilotKitMessages {
-      padding: ${config.style.padding};
-    }
-
-    .copilotKitInput {
-      padding: ${config.style.padding};
-    }
-  `;
-
-  const cssVariables = {
+  const cssVars = {
     "--copilot-kit-primary-color": config.colors.primary,
     "--copilot-kit-contrast-color": config.colors.contrast,
     "--copilot-kit-background-color": config.colors.background,
@@ -64,10 +59,40 @@ export default function PreviewPage() {
     "--copilot-kit-muted-color": config.colors.muted,
   } as CopilotKitCSSProperties;
 
+  const customStyles = `
+    /* Typography and radii you already had */
+    .copilotKitMessages,.copilotKitInput,.copilotKitUserMessage,.copilotKitAssistantMessage{
+      font-family:${config.typography.fontFamily}!important;
+      font-size:${config.typography.fontSize}!important;
+    }
+    .copilotKitUserMessage,.copilotKitAssistantMessage{
+      border-radius:${config.style.borderRadius}!important;
+    }
+    .copilotKitMessages{padding:${config.style.padding}!important;}
+    .copilotKitInput{padding:${config.style.padding}!important;}
+
+    /* NEW: layout so only the message list scrolls */
+    html, body { height:100%; }
+    .chat-container {
+      height: 100%;            /* fill parent element */
+      display: flex;
+      flex-direction: column;
+      overflow: scroll;        /* prevent the page from growing */
+    }
+    .chat-container .copilotKitMessages {
+      flex: 1 1 auto;          /* take remaining space */
+      min-height: 0;           /* allow flex child to shrink for scrolling */
+      overflow-y: auto;        /* scroll messages only */
+    }
+    .chat-container .copilotKitInput {
+      flex: 0 0 auto;          /* input stays pinned at the bottom */
+    }
+  `;
+
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: customStyles }} />
-      <div style={cssVariables} className="h-screen w-screen">
+      <div ref={rootRef} className="chat-container" style={cssVars}>
         <CopilotChat
           labels={{
             title: config.labels.title,
