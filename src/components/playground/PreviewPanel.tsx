@@ -13,25 +13,7 @@ interface PreviewPanelProps {
 export function PreviewPanel({ config, onExport }: PreviewPanelProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isReady, setIsReady] = useState(false);
-  const [debouncedAgentConfig, setDebouncedAgentConfig] = useState(config.agentConfig);
-
-  // Debounce agent config changes to avoid iframe reload on every keystroke
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedAgentConfig(config.agentConfig);
-    }, 500); // 500ms debounce
-
-    return () => clearTimeout(timer);
-  }, [config.agentConfig]);
-
-  const iframeSrc = `/preview?agUiUrl=${encodeURIComponent(
-    debouncedAgentConfig.agUiUrl
-  )}&agentName=${encodeURIComponent(debouncedAgentConfig.agentName)}`;
-
-  // Reset ready state when iframe src changes
-  useEffect(() => {
-    setIsReady(false);
-  }, [iframeSrc]);
+  const iframeSrc = `/preview`;
 
   useEffect(() => {
     const onMsg = (event: MessageEvent) => {

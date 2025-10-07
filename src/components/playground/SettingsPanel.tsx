@@ -47,7 +47,7 @@ export function SettingsPanel({
         isOpen={isAgentSetupModalOpen}
         onClose={() => setIsAgentSetupModalOpen(false)}
       />
-    <div className="w-96 h-full border-2 border-white bg-white/50 backdrop-blur-sm rounded-lg overflow-hidden flex-shrink-0">
+    <div className="w-[440px] h-full border-2 border-white bg-white/50 backdrop-blur-sm rounded-lg overflow-hidden flex-shrink-0">
       <div className="flex items-center justify-between p-6 border-b border-palette-border-container">
         <h2 className="text-lg font-semibold text-palette-text-primary">Settings</h2>
         <Button variant="outline" size="sm" onClick={onReset}>
@@ -82,7 +82,7 @@ export function SettingsPanel({
                   value={config.agentConfig.agUiUrl}
                   onChange={(e) => onUpdateAgentConfig("agUiUrl", e.target.value)}
                   placeholder="http://localhost:8123"
-                  className="w-48"
+                  className="w-44"
                 />
               </div>
 
@@ -96,7 +96,7 @@ export function SettingsPanel({
                   value={config.agentConfig.agentName}
                   onChange={(e) => onUpdateAgentConfig("agentName", e.target.value)}
                   placeholder="sample_agent"
-                  className="w-48"
+                  className="w-44"
                 />
               </div>
             </div>
@@ -120,7 +120,7 @@ export function SettingsPanel({
                   type="text"
                   value={config.labels.title}
                   onChange={(e) => onUpdateLabel("title", e.target.value)}
-                  className="w-48"
+                  className="w-44"
                 />
               </div>
 
@@ -133,7 +133,7 @@ export function SettingsPanel({
                   value={config.labels.initial}
                   onChange={(e) => onUpdateLabel("initial", e.target.value)}
                   rows={2}
-                  className="resize-none w-48"
+                  className="resize-none w-44"
                 />
               </div>
 
@@ -146,7 +146,7 @@ export function SettingsPanel({
                   type="text"
                   value={config.labels.placeholder}
                   onChange={(e) => onUpdateLabel("placeholder", e.target.value)}
-                  className="w-48"
+                  className="w-44"
                 />
               </div>
             </div>
@@ -169,7 +169,7 @@ export function SettingsPanel({
                   value={config.colorScheme}
                   onValueChange={(value) => onUpdateColorScheme(value as "light" | "dark")}
                 >
-                  <SelectTrigger id="colorScheme" className="w-48">
+                  <SelectTrigger id="colorScheme" className="w-44">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -237,7 +237,7 @@ export function SettingsPanel({
                   value={config.typography.fontFamily}
                   onValueChange={(value) => onUpdateTypography("fontFamily", value)}
                 >
-                  <SelectTrigger id="fontFamily" className="w-48">
+                  <SelectTrigger id="fontFamily" className="w-44">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -258,7 +258,7 @@ export function SettingsPanel({
                   value={config.typography.fontSize}
                   onValueChange={(value) => onUpdateTypography("fontSize", value)}
                 >
-                  <SelectTrigger id="fontSize" className="w-48">
+                  <SelectTrigger id="fontSize" className="w-44">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -289,7 +289,7 @@ export function SettingsPanel({
                   value={config.style.borderRadius}
                   onValueChange={(value) => onUpdateStyle("borderRadius", value)}
                 >
-                  <SelectTrigger id="borderRadius" className="w-48">
+                  <SelectTrigger id="borderRadius" className="w-44">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -310,7 +310,7 @@ export function SettingsPanel({
                   value={config.style.padding}
                   onValueChange={(value) => onUpdateStyle("padding", value)}
                 >
-                  <SelectTrigger id="padding" className="w-48">
+                  <SelectTrigger id="padding" className="w-44">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -333,7 +333,7 @@ export function SettingsPanel({
                   value={config.style.bubbleBorderRadius}
                   onValueChange={(value) => onUpdateStyle("bubbleBorderRadius", value)}
                 >
-                  <SelectTrigger id="bubbleBorderRadius" className="w-48">
+                  <SelectTrigger id="bubbleBorderRadius" className="w-44">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -379,7 +379,7 @@ function ColorInput({
   return (
     <div className="flex items-center justify-between gap-3">
       <Label className="text-xs font-medium whitespace-nowrap">{label}</Label>
-      <div className="flex gap-2 w-48">
+      <div className="flex gap-2 w-44">
         <input
           type="color"
           value={value}
