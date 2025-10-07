@@ -1,6 +1,13 @@
 "use client";
 
 import { PlaygroundConfig } from "@/types/playground";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface SettingsPanelProps {
   config: PlaygroundConfig;
@@ -22,215 +29,233 @@ export function SettingsPanel({
   onReset,
 }: SettingsPanelProps) {
   return (
-    <div className="w-80 h-screen overflow-y-auto border-r border-gray-200 bg-gray-50 p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">Settings</h2>
-        <button
-          onClick={onReset}
-          className="text-sm text-gray-600 hover:text-gray-900 underline"
-        >
+    <div className="w-80 h-screen border-r bg-muted/20">
+      <div className="flex items-center justify-between p-6 border-b bg-background/50 backdrop-blur-sm">
+        <h2 className="text-lg font-semibold">Settings</h2>
+        <Button variant="outline" size="sm" onClick={onReset}>
           Reset
-        </button>
+        </Button>
       </div>
+      <ScrollArea className="h-[calc(100vh-73px)]">
+        <div className="p-4 space-y-4">
 
-      {/* Agent Configuration Section */}
-      <section className="mb-8">
-        <h3 className="text-sm font-semibold text-gray-700 mb-4">Agent Configuration</h3>
+          {/* Agent Configuration Section */}
+          <Card className="shadow-sm border-muted/50">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Agent Configuration</CardTitle>
+              <CardDescription className="text-xs">Configure your agent settings</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="agUiUrl" className="text-xs font-medium">AG-UI URL</Label>
+                <Input
+                  id="agUiUrl"
+                  type="text"
+                  value={config.agentConfig.agUiUrl}
+                  onChange={(e) => onUpdateAgentConfig("agUiUrl", e.target.value)}
+                  placeholder="http://localhost:8123"
+                  className="h-9 text-sm"
+                />
+              </div>
 
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              AG-UI URL
-            </label>
-            <input
-              type="text"
-              value={config.agentConfig.agUiUrl}
-              onChange={(e) => onUpdateAgentConfig("agUiUrl", e.target.value)}
-              placeholder="http://localhost:8123"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="agentName" className="text-xs font-medium">Agent Name</Label>
+                <Input
+                  id="agentName"
+                  type="text"
+                  value={config.agentConfig.agentName}
+                  onChange={(e) => onUpdateAgentConfig("agentName", e.target.value)}
+                  placeholder="sample_agent"
+                  className="h-9 text-sm"
+                />
+              </div>
+            </CardContent>
+          </Card>
 
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              Agent Name
-            </label>
-            <input
-              type="text"
-              value={config.agentConfig.agentName}
-              onChange={(e) => onUpdateAgentConfig("agentName", e.target.value)}
-              placeholder="sample_agent"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          {/* Text Customization Section */}
+          <Card className="shadow-sm border-muted/50">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Text</CardTitle>
+              <CardDescription className="text-xs">Customize chat text and labels</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="title" className="text-xs font-medium">Title</Label>
+                <Input
+                  id="title"
+                  type="text"
+                  value={config.labels.title}
+                  onChange={(e) => onUpdateLabel("title", e.target.value)}
+                  className="h-9 text-sm"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="initial" className="text-xs font-medium">Initial Message</Label>
+                <Textarea
+                  id="initial"
+                  value={config.labels.initial}
+                  onChange={(e) => onUpdateLabel("initial", e.target.value)}
+                  rows={3}
+                  className="text-sm resize-none"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="placeholder" className="text-xs font-medium">Placeholder</Label>
+                <Input
+                  id="placeholder"
+                  type="text"
+                  value={config.labels.placeholder}
+                  onChange={(e) => onUpdateLabel("placeholder", e.target.value)}
+                  className="h-9 text-sm"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Color Scheme Section */}
+          <Card className="shadow-sm border-muted/50">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Colors</CardTitle>
+              <CardDescription className="text-xs">Customize the color scheme</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-4">
+              <ColorInput
+                label="Primary"
+                value={config.colors.primary}
+                onChange={(value) => onUpdateColor("primary", value)}
+              />
+              <ColorInput
+                label="Contrast"
+                value={config.colors.contrast}
+                onChange={(value) => onUpdateColor("contrast", value)}
+              />
+              <ColorInput
+                label="Background"
+                value={config.colors.background}
+                onChange={(value) => onUpdateColor("background", value)}
+              />
+              <ColorInput
+                label="Secondary"
+                value={config.colors.secondary}
+                onChange={(value) => onUpdateColor("secondary", value)}
+              />
+              <ColorInput
+                label="Secondary Contrast"
+                value={config.colors.secondaryContrast}
+                onChange={(value) => onUpdateColor("secondaryContrast", value)}
+              />
+              <ColorInput
+                label="Separator"
+                value={config.colors.separator}
+                onChange={(value) => onUpdateColor("separator", value)}
+              />
+              <ColorInput
+                label="Muted"
+                value={config.colors.muted}
+                onChange={(value) => onUpdateColor("muted", value)}
+              />
+            </CardContent>
+          </Card>
+
+          {/* Typography Section */}
+          <Card className="shadow-sm border-muted/50">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Typography</CardTitle>
+              <CardDescription className="text-xs">Adjust font settings</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="fontFamily" className="text-xs font-medium">Font Family</Label>
+                <Select value={config.typography.fontFamily} onValueChange={(value) => onUpdateTypography("fontFamily", value)}>
+                  <SelectTrigger id="fontFamily" className="h-9 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="system-ui, -apple-system, sans-serif">System UI</SelectItem>
+                    <SelectItem value="Georgia, serif">Georgia</SelectItem>
+                    <SelectItem value="'Courier New', monospace">Courier New</SelectItem>
+                    <SelectItem value="Arial, sans-serif">Arial</SelectItem>
+                    <SelectItem value="'Times New Roman', serif">Times New Roman</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="fontSize" className="text-xs font-medium">Font Size</Label>
+                <Select value={config.typography.fontSize} onValueChange={(value) => onUpdateTypography("fontSize", value)}>
+                  <SelectTrigger id="fontSize" className="h-9 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="12px">12px</SelectItem>
+                    <SelectItem value="14px">14px</SelectItem>
+                    <SelectItem value="16px">16px</SelectItem>
+                    <SelectItem value="18px">18px</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Style Section */}
+          <Card className="shadow-sm border-muted/50">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Style</CardTitle>
+              <CardDescription className="text-xs">Customize visual styling</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="borderRadius" className="text-xs font-medium">Border Radius</Label>
+                <Select value={config.style.borderRadius} onValueChange={(value) => onUpdateStyle("borderRadius", value)}>
+                  <SelectTrigger id="borderRadius" className="h-9 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0px">None (0px)</SelectItem>
+                    <SelectItem value="4px">Small (4px)</SelectItem>
+                    <SelectItem value="8px">Medium (8px)</SelectItem>
+                    <SelectItem value="12px">Large (12px)</SelectItem>
+                    <SelectItem value="16px">Extra Large (16px)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="padding" className="text-xs font-medium">Padding</Label>
+                <Select value={config.style.padding} onValueChange={(value) => onUpdateStyle("padding", value)}>
+                  <SelectTrigger id="padding" className="h-9 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="8px">Small (8px)</SelectItem>
+                    <SelectItem value="12px">Medium (12px)</SelectItem>
+                    <SelectItem value="16px">Large (16px)</SelectItem>
+                    <SelectItem value="20px">Extra Large (20px)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="bubbleBorderRadius" className="text-xs font-medium">Bubble Border Radius</Label>
+                <Select value={config.style.bubbleBorderRadius} onValueChange={(value) => onUpdateStyle("bubbleBorderRadius", value)}>
+                  <SelectTrigger id="bubbleBorderRadius" className="h-9 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0px">None (0px)</SelectItem>
+                    <SelectItem value="4px">Small (4px)</SelectItem>
+                    <SelectItem value="8px">Medium (8px)</SelectItem>
+                    <SelectItem value="12px">Large (12px)</SelectItem>
+                    <SelectItem value="16px">Extra Large (16px)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </section>
-
-      {/* Text Customization Section */}
-      <section className="mb-8">
-        <h3 className="text-sm font-semibold text-gray-700 mb-4">Text</h3>
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              Title
-            </label>
-            <input
-              type="text"
-              value={config.labels.title}
-              onChange={(e) => onUpdateLabel("title", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              Initial Message
-            </label>
-            <textarea
-              value={config.labels.initial}
-              onChange={(e) => onUpdateLabel("initial", e.target.value)}
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              Placeholder
-            </label>
-            <input
-              type="text"
-              value={config.labels.placeholder}
-              onChange={(e) => onUpdateLabel("placeholder", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Color Scheme Section */}
-      <section className="mb-8">
-        <h3 className="text-sm font-semibold text-gray-700 mb-4">Colors</h3>
-
-        <div className="space-y-4">
-          <ColorInput
-            label="Primary"
-            value={config.colors.primary}
-            onChange={(value) => onUpdateColor("primary", value)}
-          />
-          <ColorInput
-            label="Contrast"
-            value={config.colors.contrast}
-            onChange={(value) => onUpdateColor("contrast", value)}
-          />
-          <ColorInput
-            label="Background"
-            value={config.colors.background}
-            onChange={(value) => onUpdateColor("background", value)}
-          />
-          <ColorInput
-            label="Secondary"
-            value={config.colors.secondary}
-            onChange={(value) => onUpdateColor("secondary", value)}
-          />
-          <ColorInput
-            label="Secondary Contrast"
-            value={config.colors.secondaryContrast}
-            onChange={(value) => onUpdateColor("secondaryContrast", value)}
-          />
-          <ColorInput
-            label="Separator"
-            value={config.colors.separator}
-            onChange={(value) => onUpdateColor("separator", value)}
-          />
-          <ColorInput
-            label="Muted"
-            value={config.colors.muted}
-            onChange={(value) => onUpdateColor("muted", value)}
-          />
-        </div>
-      </section>
-
-      {/* Typography Section */}
-      <section className="mb-8">
-        <h3 className="text-sm font-semibold text-gray-700 mb-4">Typography</h3>
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              Font Family
-            </label>
-            <select
-              value={config.typography.fontFamily}
-              onChange={(e) => onUpdateTypography("fontFamily", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="system-ui, -apple-system, sans-serif">System UI</option>
-              <option value="Georgia, serif">Georgia</option>
-              <option value="'Courier New', monospace">Courier New</option>
-              <option value="Arial, sans-serif">Arial</option>
-              <option value="'Times New Roman', serif">Times New Roman</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              Font Size
-            </label>
-            <select
-              value={config.typography.fontSize}
-              onChange={(e) => onUpdateTypography("fontSize", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="12px">12px</option>
-              <option value="14px">14px</option>
-              <option value="16px">16px</option>
-              <option value="18px">18px</option>
-            </select>
-          </div>
-        </div>
-      </section>
-
-      {/* Style Section */}
-      <section className="mb-8">
-        <h3 className="text-sm font-semibold text-gray-700 mb-4">Style</h3>
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              Border Radius
-            </label>
-            <select
-              value={config.style.borderRadius}
-              onChange={(e) => onUpdateStyle("borderRadius", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="0px">None (0px)</option>
-              <option value="4px">Small (4px)</option>
-              <option value="8px">Medium (8px)</option>
-              <option value="12px">Large (12px)</option>
-              <option value="16px">Extra Large (16px)</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              Padding
-            </label>
-            <select
-              value={config.style.padding}
-              onChange={(e) => onUpdateStyle("padding", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="8px">Small (8px)</option>
-              <option value="12px">Medium (12px)</option>
-              <option value="16px">Large (16px)</option>
-              <option value="20px">Extra Large (20px)</option>
-            </select>
-          </div>
-        </div>
-      </section>
+      </ScrollArea>
     </div>
   );
 }
@@ -246,22 +271,20 @@ function ColorInput({
   onChange: (value: string) => void;
 }) {
   return (
-    <div>
-      <label className="block text-xs font-medium text-gray-600 mb-1">
-        {label}
-      </label>
+    <div className="space-y-1.5">
+      <Label className="text-xs font-medium">{label}</Label>
       <div className="flex gap-2">
         <input
           type="color"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="h-10 w-16 border border-gray-300 rounded cursor-pointer"
+          className="h-9 w-14 rounded-md border border-input cursor-pointer bg-background"
         />
-        <input
+        <Input
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 h-9 text-sm font-mono"
         />
       </div>
     </div>

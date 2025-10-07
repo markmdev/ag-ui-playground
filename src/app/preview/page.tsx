@@ -40,7 +40,18 @@ export default function PreviewPage() {
 
   if (!config) {
     return (
-      <div ref={rootRef} style={{ padding: 16, display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", flexDirection: "column", gap: "12px" }}>
+      <div
+        ref={rootRef}
+        style={{
+          padding: 16,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          flexDirection: "column",
+          gap: "12px",
+        }}
+      >
         <div style={{ fontSize: "14px", color: "#6b7280" }}>Loading preview...</div>
         <div style={{ fontSize: "12px", color: "#9ca3af", maxWidth: "400px", textAlign: "center" }}>
           Make sure your AG-UI agent is running at the configured URL
@@ -61,12 +72,12 @@ export default function PreviewPage() {
 
   const customStyles = `
     /* Typography and radii you already had */
-    .copilotKitMessages,.copilotKitInput,.copilotKitUserMessage,.copilotKitAssistantMessage{
+    .copilotKitMessages,.copilotKitInput,.copilotKitUserMessage,.copilotKitAssistantMessage,.copilotKitMarkdownElement{
       font-family:${config.typography.fontFamily}!important;
       font-size:${config.typography.fontSize}!important;
     }
     .copilotKitUserMessage,.copilotKitAssistantMessage{
-      border-radius:${config.style.borderRadius}!important;
+      border-radius:${config.style.bubbleBorderRadius}!important;
     }
     .copilotKitMessages{padding:${config.style.padding}!important;}
     .copilotKitInput{padding:${config.style.padding}!important;}
@@ -74,18 +85,13 @@ export default function PreviewPage() {
     /* NEW: layout so only the message list scrolls */
     html, body { height:100%; }
     .chat-container {
-      height: 100%;            /* fill parent element */
+      height: 100% !important;            /* fill parent element */
       display: flex;
       flex-direction: column;
       overflow: scroll;        /* prevent the page from growing */
     }
-    .chat-container .copilotKitMessages {
-      flex: 1 1 auto;          /* take remaining space */
-      min-height: 0;           /* allow flex child to shrink for scrolling */
-      overflow-y: auto;        /* scroll messages only */
-    }
-    .chat-container .copilotKitInput {
-      flex: 0 0 auto;          /* input stays pinned at the bottom */
+    .copilotKitChat {
+      height: 100% !important;
     }
   `;
 

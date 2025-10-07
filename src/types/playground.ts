@@ -33,6 +33,7 @@ export interface PlaygroundConfig {
   style: {
     borderRadius: string;
     padding: string;
+    bubbleBorderRadius: string;
   };
 }
 
@@ -62,5 +63,6 @@ export const DEFAULT_CONFIG: PlaygroundConfig = {
   style: {
     borderRadius: "8px",
     padding: "16px",
+    bubbleBorderRadius: "8px",
   },
 };
