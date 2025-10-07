@@ -2,7 +2,7 @@
 
 import { useMemo, useState, type CSSProperties } from "react";
 import {
-  CopilotPopup,
+  CopilotChat,
   type InputProps,
   type RenderSuggestionsListProps,
   useChatContext,
@@ -156,11 +156,8 @@ export const PreviewPanel = ({ config }: PreviewPanelProps) => {
                   </div>
                 </div>
               )}
-              <CopilotPopup
-                defaultOpen={true}
-                clickOutsideToClose={false}
-                hitEscapeToClose={false}
-                className="playground-preview-popup"
+              <CopilotChat
+                className="playground-preview-chat"
                 labels={{
                   title: "Playground Copilot",
                   placeholder: config.composer.placeholder,

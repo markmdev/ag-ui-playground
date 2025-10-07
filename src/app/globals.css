@@ -30,28 +30,17 @@ html {
   color: var(--copilot-kit-primary-color);
 }
 
-.playground-preview .copilotKitButton {
-  display: none;
-}
-
-.playground-preview .copilotKitWindow {
-  position: static;
-  inset: auto;
-  transform: none !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  margin: 0;
+.playground-preview .copilotKitChat {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 520px;
   max-height: 520px;
   border-radius: var(--playground-radius, 24px);
-  box-shadow: none;
   border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: none;
   background-color: var(--copilot-kit-background-color);
-}
-
-.playground-preview .copilotKitWindow.open {
-  transform: none;
+  overflow: hidden;
 }
 
 .playground-preview .copilotKitHeader {
@@ -59,7 +48,12 @@ html {
   border-bottom: 1px solid rgba(148, 163, 184, 0.3);
 }
 
+.playground-preview .copilotKitHeaderCloseButton {
+  display: none;
+}
+
 .playground-preview .copilotKitMessages {
+  flex: 1;
   padding: var(--playground-density, 1rem);
   gap: var(--playground-density-gap, 0.9rem);
 }
