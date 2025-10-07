@@ -1,105 +1,133 @@
-# CopilotKit <> LangGraph Starter
+# CopilotKit Chat Playground
 
-This is a starter template for building AI agents using [LangGraph](https://www.langchain.com/langgraph) and [CopilotKit](https://copilotkit.ai). It provides a modern Next.js application with an integrated LangGraph agent to be built on top of.
+A visual playground for customizing CopilotKit chat components. Adjust colors, fonts, and text, then export production-ready code.
 
-## Prerequisites
+## Overview
 
-- Node.js 18+ 
-- Python 3.8+
-- Any of the following package managers:
-  - [pnpm](https://pnpm.io/installation) (recommended)
-  - npm
-  - [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
-  - [bun](https://bun.sh/)
-- OpenAI API Key (for the LangGraph agent)
-
-> **Note:** This repository ignores lock files (package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb) to avoid conflicts between different package managers. Each developer should generate their own lock file using their preferred package manager. After that, make sure to delete it from the .gitignore.
+This tool lets you customize CopilotKit chat appearance with a live preview and export the code when you're done. Useful for designers and developers who want to integrate AI chat into their applications.
 
 ## Getting Started
 
-1. Install dependencies using your preferred package manager:
-```bash
-# Using pnpm (recommended)
-pnpm install
+### Prerequisites
 
-# Using npm
+- Node.js 18+
+- npm, pnpm, yarn, or bun
+- OpenAI API key (for the live preview agent)
+
+### Installation
+
+```bash
 npm install
-
-# Using yarn
-yarn install
-
-# Using bun
-bun install
 ```
 
-> **Note:** Installing the package dependencies will also install the agent's python dependencies via the `install:agent` script.
+The postinstall script sets up the Python agent automatically.
 
+### Running Locally
 
-2. Set up your OpenAI API key:
 ```bash
-echo 'OPENAI_API_KEY=your-openai-api-key-here' > agent/.env
-```
-
-3. Start the development server:
-```bash
-# Using pnpm
-pnpm dev
-
-# Using npm
 npm run dev
-
-# Using yarn
-yarn dev
-
-# Using bun
-bun run dev
 ```
 
-This will start both the UI and agent servers concurrently.
+This starts the UI on `localhost:3000` and the agent on `localhost:8123`. Open your browser to `http://localhost:3000`.
+
+## How It Works
+
+1. Adjust settings in the left panel (colors, fonts, text, spacing)
+2. See changes in real-time in the center preview
+3. Click "Export Code" when finished
+4. Copy the generated files into your project
+
+The export includes:
+- `MyChat.tsx` - Your customized chat component
+- `layout.tsx` - CopilotKit wrapper
+- `route.ts` - API route
+- `.env.local` - Environment variables template
 
 ## Available Scripts
-The following scripts can also be run using your preferred package manager:
-- `dev` - Starts both UI and agent servers in development mode
-- `dev:debug` - Starts development servers with debug logging enabled
-- `dev:ui` - Starts only the Next.js UI server
-- `dev:agent` - Starts only the LangGraph agent server
-- `build` - Builds the Next.js application for production
-- `start` - Starts the production server
-- `lint` - Runs ESLint for code linting
-- `install:agent` - Installs Python dependencies for the agent
 
-## Documentation
+- `npm run dev` - Start UI and agent
+- `npm run dev:ui` - Start UI only
+- `npm run dev:agent` - Start agent only
+- `npm run build` - Build for production
+- `npm run start` - Run production build
 
-The main UI component is in `src/app/page.tsx`. You can:
-- Modify the theme colors and styling
-- Add new frontend actions
-- Customize the CopilotKit sidebar appearance
+## Project Structure
 
-## 📚 Documentation
+```
+src/
+├── app/
+│   ├── page.tsx                    # Main playground
+│   ├── layout.tsx                  # Root layout
+│   ├── preview/                    # Preview iframe
+│   └── api/copilotkit-preview/     # Preview API
+├── components/
+│   ├── playground/
+│   │   ├── PlaygroundContainer.tsx
+│   │   ├── SettingsPanel.tsx
+│   │   ├── PreviewPanel.tsx
+│   │   ├── CodeExporter.tsx
+│   │   └── AgentSetupModal.tsx
+│   └── ui/                         # shadcn/ui components
+├── hooks/
+│   └── usePlaygroundConfig.ts
+├── types/
+│   └── playground.ts
+└── utils/
+    └── codeGenerator.ts
 
-- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/) - Learn more about LangGraph and its features
-- [CopilotKit Documentation](https://docs.copilotkit.ai) - Explore CopilotKit's capabilities
-- [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API
-- [YFinance Documentation](https://pypi.org/project/yfinance/) - Financial data tools
-
-## Contributing
-
-Feel free to submit issues and enhancement requests! This starter is designed to be easily extensible.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+agent/
+├── agent.py
+├── langgraph.json
+├── requirements.txt
+└── .env
+```
 
 ## Troubleshooting
 
-### Agent Connection Issues
-If you see "I'm having trouble connecting to my tools", make sure:
-1. The LangGraph agent is running on port 8000
-2. Your OpenAI API key is set correctly
-3. Both servers started successfully
+### Preview not loading
 
-### Python Dependencies
-If you encounter Python import errors:
+The preview needs the agent running. Check:
+- Agent is running on port 8123
+- OpenAI API key is set in `agent/.env`
+- No console errors in browser
+
+### Agent won't start
+
+Reinstall Python dependencies:
+
 ```bash
-npm install:agent
+cd agent
+rm -rf .venv
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
+
+### Module not found
+
+Reinstall node dependencies:
+
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Port in use
+
+Kill the process or use a different port:
+
+```bash
+lsof -ti:3000 | xargs kill
+# or
+PORT=3001 npm run dev:ui
+```
+
+## Documentation
+
+- [CopilotKit](https://docs.copilotkit.ai)
+- [LangGraph](https://langchain-ai.github.io/langgraph/)
+- [Architecture Details](./PLAYGROUND.md)
+
+## License
+
+MIT

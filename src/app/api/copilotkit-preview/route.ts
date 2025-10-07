@@ -7,7 +7,15 @@ import {
 import { LangGraphAgent } from "@ag-ui/langgraph";
 import { NextRequest } from "next/server";
 
+/**
+ * Preview API Route
+ *
+ * This endpoint is used exclusively by the playground preview iframe.
+ * It connects to a fixed local agent for demo purposes.
+ * Users can configure different values in the UI for code export.
+ */
 export const POST = async (req: NextRequest) => {
+  // Fixed values for preview - actual deployments use environment variables
   const agUiUrl = "http://localhost:8123";
   const agentName = "sample_agent";
 
