@@ -49,11 +49,11 @@ export function PreviewPanel({ config, onExport }: PreviewPanelProps) {
   }, [config, isReady]);
 
   return (
-    <div className="flex-1 flex flex-col bg-muted/20">
-      <div className="bg-background/50 backdrop-blur-sm border-b px-6 py-4 flex items-center justify-between">
+    <div className="flex-1 flex flex-col border-2 border-white bg-white/50 backdrop-blur-sm rounded-lg overflow-hidden">
+      <div className="border-b border-palette-border-container px-6 py-4 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold">Preview</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <h2 className="text-lg font-semibold text-palette-text-primary">Preview</h2>
+          <p className="text-xs text-palette-text-secondary mt-0.5">
             Live preview of your chat component
           </p>
         </div>
@@ -62,7 +62,7 @@ export function PreviewPanel({ config, onExport }: PreviewPanelProps) {
         </Button>
       </div>
 
-      <div className="p-6 flex-1 flex flex-col bg-gray-100">
+      <div className="p-6 flex-1 flex flex-col bg-palette-surface-main">
         <iframe
           key={iframeSrc}
           ref={iframeRef}

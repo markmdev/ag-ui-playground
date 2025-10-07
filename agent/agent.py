@@ -22,7 +22,6 @@ class AgentState(MessagesState):
     the CopilotKitState fields. We're also adding a custom field, `language`,
     which will be used to set the language of the agent.
     """
-    proverbs: List[str] = []
     tools: List[Any]
     # your_custom_agent_state: str = ""
 
