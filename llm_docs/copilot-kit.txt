@@ -1,0 +1,4 @@
+Styling Copilot UI - https://docs.copilotkit.ai/langgraph/custom-look-and-feel/customize-built-in-ui-components
+Custom Sub-Components - https://docs.copilotkit.ai/custom-look-and-feel/bring-your-own-components
+Fully Headless UI - https://docs.copilotkit.ai/custom-look-and-feel/headless-ui
+Markdown rendering - https://docs.copilotkit.ai/custom-look-and-feel/markdown-rendering
