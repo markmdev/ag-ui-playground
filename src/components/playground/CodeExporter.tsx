@@ -13,7 +13,12 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface CodeExporterProps {
   config: PlaygroundConfig;
@@ -22,20 +27,26 @@ interface CodeExporterProps {
 }
 
 export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
-  const [copied, setCopied] = useState(false);
+  const [copiedItems, setCopiedItems] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState("component");
 
   const files = generateExportFiles(config);
 
-  const handleCopy = async (code: string) => {
+  const handleCopy = async (code: string, id: string) => {
     await navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setCopiedItems((prev) => new Set(prev).add(id));
+    setTimeout(() => {
+      setCopiedItems((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    }, 2000);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-7xl max-h-[90vh] flex flex-col p-0 gap-0">
+      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col p-0 gap-0">
         <DialogHeader className="px-6 pt-6 pb-3 border-b">
           <DialogTitle className="text-xl">Export Code</DialogTitle>
           <DialogDescription className="text-xs">
@@ -46,32 +57,44 @@ export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
         {/* Collapsible Instructions */}
         <Accordion type="multiple" defaultValue={["install"]} className="mx-6 mt-4">
           {/* Installation */}
-          <AccordionItem value="install" className="border rounded-lg px-4 bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-900">
+          <AccordionItem
+            value="install"
+            className="border rounded-lg px-4 bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-900"
+          >
             <AccordionTrigger className="text-sm font-semibold hover:no-underline py-3">
               📦 Installation
             </AccordionTrigger>
             <AccordionContent className="pb-3">
-              <p className="text-xs text-muted-foreground mb-2">
-                Install required dependencies:
-              </p>
+              <p className="text-xs text-muted-foreground mb-2">Install required dependencies:</p>
               <div className="relative">
                 <pre className="bg-muted/50 border px-3 py-2 rounded text-xs font-mono overflow-x-auto pr-16">
-                  <code>npm install @ag-ui/langgraph@0.0.7 @copilotkit/react-core@1.9.3 @copilotkit/react-ui@1.9.3 @copilotkit/runtime@1.9.3</code>
+                  <code>
+                    npm install @ag-ui/langgraph@0.0.7 @copilotkit/react-core@1.9.3
+                    @copilotkit/react-ui@1.9.3 @copilotkit/runtime@1.9.3
+                  </code>
                 </pre>
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => handleCopy("npm install @ag-ui/langgraph@0.0.7 @copilotkit/react-core@1.9.3 @copilotkit/react-ui@1.9.3 @copilotkit/runtime@1.9.3")}
+                  onClick={() =>
+                    handleCopy(
+                      "npm install @ag-ui/langgraph@0.0.7 @copilotkit/react-core@1.9.3 @copilotkit/react-ui@1.9.3 @copilotkit/runtime@1.9.3",
+                      "install"
+                    )
+                  }
                   className="absolute top-2 right-2 h-6 text-xs px-2 bg-background shadow-sm"
                 >
-                  {copied ? "✓" : "Copy"}
+                  {copiedItems.has("install") ? "✓" : "Copy"}
                 </Button>
               </div>
             </AccordionContent>
           </AccordionItem>
 
           {/* Setup Instructions */}
-          <AccordionItem value="setup" className="border rounded-lg px-4 mt-2 bg-accent/50 border-accent">
+          <AccordionItem
+            value="setup"
+            className="border rounded-lg px-4 mt-2 bg-accent/50 border-accent"
+          >
             <AccordionTrigger className="text-sm font-semibold hover:no-underline py-3">
               📋 Setup Instructions
             </AccordionTrigger>
@@ -103,14 +126,19 @@ export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
                 </li>
                 <li>
                   4. Add environment variables to{" "}
-                  <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">.env.local</code>
+                  <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">
+                    .env.local
+                  </code>
                 </li>
               </ol>
             </AccordionContent>
           </AccordionItem>
 
           {/* Usage */}
-          <AccordionItem value="usage" className="border rounded-lg px-4 mt-2 bg-primary/5 border-primary/20">
+          <AccordionItem
+            value="usage"
+            className="border rounded-lg px-4 mt-2 bg-primary/5 border-primary/20"
+          >
             <AccordionTrigger className="text-sm font-semibold hover:no-underline py-3">
               💡 Using Your Component
             </AccordionTrigger>
@@ -129,10 +157,10 @@ export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => handleCopy("import MyChat from '@/components/MyChat'")}
+                  onClick={() => handleCopy("import MyChat from '@/components/MyChat'", "import")}
                   className="absolute top-2 right-1 h-5 text-[10px] px-1.5 bg-background shadow-sm"
                 >
-                  {copied ? "✓" : "Copy"}
+                  {copiedItems.has("import") ? "✓" : "Copy"}
                 </Button>
               </div>
               <div className="relative">
@@ -144,10 +172,15 @@ export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => handleCopy(`<div className="w-1/2 max-h-[400px]">\n  <MyChat />\n</div>`)}
+                  onClick={() =>
+                    handleCopy(
+                      `<div className="w-1/2 max-h-[400px]">\n  <MyChat />\n</div>`,
+                      "usage"
+                    )
+                  }
                   className="absolute top-2 right-1 h-5 text-[10px] px-1.5 bg-background shadow-sm"
                 >
-                  {copied ? "✓" : "Copy"}
+                  {copiedItems.has("usage") ? "✓" : "Copy"}
                 </Button>
               </div>
             </AccordionContent>
@@ -183,10 +216,10 @@ export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
               <Button
                 size="sm"
                 variant="default"
-                onClick={() => handleCopy(files.component)}
+                onClick={() => handleCopy(files.component, "component")}
                 className="absolute top-3 right-3 h-7 text-xs"
               >
-                {copied ? "✓ Copied!" : "Copy"}
+                {copiedItems.has("component") ? "✓ Copied!" : "Copy"}
               </Button>
             </div>
           </TabsContent>
@@ -199,10 +232,10 @@ export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
               <Button
                 size="sm"
                 variant="default"
-                onClick={() => handleCopy(files.layout)}
+                onClick={() => handleCopy(files.layout, "layout")}
                 className="absolute top-3 right-3 h-7 text-xs"
               >
-                {copied ? "✓ Copied!" : "Copy"}
+                {copiedItems.has("layout") ? "✓ Copied!" : "Copy"}
               </Button>
             </div>
           </TabsContent>
@@ -215,10 +248,10 @@ export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
               <Button
                 size="sm"
                 variant="default"
-                onClick={() => handleCopy(files.apiRoute)}
+                onClick={() => handleCopy(files.apiRoute, "apiRoute")}
                 className="absolute top-3 right-3 h-7 text-xs"
               >
-                {copied ? "✓ Copied!" : "Copy"}
+                {copiedItems.has("apiRoute") ? "✓ Copied!" : "Copy"}
               </Button>
             </div>
           </TabsContent>
@@ -231,10 +264,10 @@ export function CodeExporter({ config, isOpen, onClose }: CodeExporterProps) {
               <Button
                 size="sm"
                 variant="default"
-                onClick={() => handleCopy(files.envVars)}
+                onClick={() => handleCopy(files.envVars, "envVars")}
                 className="absolute top-3 right-3 h-7 text-xs"
               >
-                {copied ? "✓ Copied!" : "Copy"}
+                {copiedItems.has("envVars") ? "✓ Copied!" : "Copy"}
               </Button>
             </div>
           </TabsContent>

@@ -61,7 +61,7 @@ export function SettingsPanel({
                   value={config.agentConfig.agUiUrl}
                   onChange={(e) => onUpdateAgentConfig("agUiUrl", e.target.value)}
                   placeholder="http://localhost:8123"
-                  className="h-7 w-48"
+                  className="w-48"
                 />
               </div>
 
@@ -75,7 +75,7 @@ export function SettingsPanel({
                   value={config.agentConfig.agentName}
                   onChange={(e) => onUpdateAgentConfig("agentName", e.target.value)}
                   placeholder="sample_agent"
-                  className="h-7 w-48"
+                  className="w-48"
                 />
               </div>
             </div>
@@ -97,7 +97,7 @@ export function SettingsPanel({
                   type="text"
                   value={config.labels.title}
                   onChange={(e) => onUpdateLabel("title", e.target.value)}
-                  className="h-7 w-48"
+                  className="w-48"
                 />
               </div>
 
@@ -110,7 +110,7 @@ export function SettingsPanel({
                   value={config.labels.initial}
                   onChange={(e) => onUpdateLabel("initial", e.target.value)}
                   rows={2}
-                  className="text-[10px] resize-none w-48 py-1.5"
+                  className="resize-none w-48"
                 />
               </div>
 
@@ -123,7 +123,7 @@ export function SettingsPanel({
                   type="text"
                   value={config.labels.placeholder}
                   onChange={(e) => onUpdateLabel("placeholder", e.target.value)}
-                  className="h-7 w-48"
+                  className="w-48"
                 />
               </div>
             </div>
@@ -144,7 +144,7 @@ export function SettingsPanel({
                   value={config.colorScheme}
                   onValueChange={(value) => onUpdateColorScheme(value as "light" | "dark")}
                 >
-                  <SelectTrigger id="colorScheme" className="h-7 w-48">
+                  <SelectTrigger id="colorScheme" className="w-48">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -212,7 +212,7 @@ export function SettingsPanel({
                   value={config.typography.fontFamily}
                   onValueChange={(value) => onUpdateTypography("fontFamily", value)}
                 >
-                  <SelectTrigger id="fontFamily" className="h-7 w-48">
+                  <SelectTrigger id="fontFamily" className="w-48">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -233,7 +233,7 @@ export function SettingsPanel({
                   value={config.typography.fontSize}
                   onValueChange={(value) => onUpdateTypography("fontSize", value)}
                 >
-                  <SelectTrigger id="fontSize" className="h-7 w-48">
+                  <SelectTrigger id="fontSize" className="w-48">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -262,7 +262,7 @@ export function SettingsPanel({
                   value={config.style.borderRadius}
                   onValueChange={(value) => onUpdateStyle("borderRadius", value)}
                 >
-                  <SelectTrigger id="borderRadius" className="h-7 w-48">
+                  <SelectTrigger id="borderRadius" className="w-48">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -283,7 +283,7 @@ export function SettingsPanel({
                   value={config.style.padding}
                   onValueChange={(value) => onUpdateStyle("padding", value)}
                 >
-                  <SelectTrigger id="padding" className="h-7 w-48">
+                  <SelectTrigger id="padding" className="w-48">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -306,7 +306,7 @@ export function SettingsPanel({
                   value={config.style.bubbleBorderRadius}
                   onValueChange={(value) => onUpdateStyle("bubbleBorderRadius", value)}
                 >
-                  <SelectTrigger id="bubbleBorderRadius" className="h-7 w-48">
+                  <SelectTrigger id="bubbleBorderRadius" className="w-48">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -350,7 +350,7 @@ function ColorInput({
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="flex-1 h-7 font-mono"
+          className="flex-1 font-mono"
         />
       </div>
     </div>
