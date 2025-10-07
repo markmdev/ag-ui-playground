@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { PlaygroundConfig } from "@/types/playground";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { AgentSetupModal } from "./AgentSetupModal";
+import { HelpCircle } from "lucide-react";
 
 interface SettingsPanelProps {
   config: PlaygroundConfig;
@@ -36,25 +39,43 @@ export function SettingsPanel({
   onUpdateColorScheme,
   onReset,
 }: SettingsPanelProps) {
+  const [isAgentSetupModalOpen, setIsAgentSetupModalOpen] = useState(false);
+
   return (
-    <div className="w-96 h-screen border-r bg-muted/20">
-      <div className="flex items-center justify-between p-6 border-b bg-background/50 backdrop-blur-sm">
-        <h2 className="text-lg font-semibold">Settings</h2>
+    <>
+      <AgentSetupModal
+        isOpen={isAgentSetupModalOpen}
+        onClose={() => setIsAgentSetupModalOpen(false)}
+      />
+    <div className="w-96 h-full border-2 border-white bg-white/50 backdrop-blur-sm rounded-lg overflow-hidden flex-shrink-0">
+      <div className="flex items-center justify-between p-6 border-b border-palette-border-container">
+        <h2 className="text-lg font-semibold text-palette-text-primary">Settings</h2>
         <Button variant="outline" size="sm" onClick={onReset}>
           Reset
         </Button>
       </div>
-      <ScrollArea className="h-[calc(100vh-73px)]">
+      <ScrollArea className="h-[calc(100%-89px)]">
         <div className="px-4 py-6 space-y-6">
           {/* Agent Configuration Section */}
           <div>
-            <h3 className="text-sm font-semibold mb-1">Agent Configuration</h3>
-            <p className="text-xs text-muted-foreground mb-4">Configure your agent settings</p>
+            <SectionTitle title="AGENT CONFIGURATION" />
+            <p className="text-xs text-palette-text-secondary mb-4 px-1">
+              Configure your agent settings
+            </p>
             <div className="space-y-3">
               <div className="flex items-center justify-between gap-3">
-                <Label htmlFor="agUiUrl" className="text-xs font-medium whitespace-nowrap">
-                  AG-UI URL
-                </Label>
+                <div className="flex items-center gap-1.5">
+                  <Label htmlFor="agUiUrl" className="text-xs font-medium whitespace-nowrap">
+                    Agent Endpoint (AG-UI URL)
+                  </Label>
+                  <button
+                    onClick={() => setIsAgentSetupModalOpen(true)}
+                    className="text-palette-text-secondary hover:text-palette-text-primary transition-colors"
+                    title="What's this?"
+                  >
+                    <HelpCircle className="w-3.5 h-3.5" />
+                  </button>
+                </div>
                 <Input
                   id="agUiUrl"
                   type="text"
@@ -85,8 +106,10 @@ export function SettingsPanel({
 
           {/* Text Customization Section */}
           <div>
-            <h3 className="text-sm font-semibold mb-1">Text</h3>
-            <p className="text-xs text-muted-foreground mb-4">Customize chat text and labels</p>
+            <SectionTitle title="TEXT" />
+            <p className="text-xs text-palette-text-secondary mb-4 px-1">
+              Customize chat text and labels
+            </p>
             <div className="space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <Label htmlFor="title" className="text-xs font-medium whitespace-nowrap">
@@ -133,8 +156,10 @@ export function SettingsPanel({
 
           {/* Color Scheme Section */}
           <div>
-            <h3 className="text-sm font-semibold mb-1">Colors</h3>
-            <p className="text-xs text-muted-foreground mb-4">Customize the color scheme</p>
+            <SectionTitle title="COLORS" />
+            <p className="text-xs text-palette-text-secondary mb-4 px-1">
+              Customize the color scheme
+            </p>
             <div className="space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <Label htmlFor="colorScheme" className="text-xs font-medium whitespace-nowrap">
@@ -201,8 +226,8 @@ export function SettingsPanel({
 
           {/* Typography Section */}
           <div>
-            <h3 className="text-sm font-semibold mb-1">Typography</h3>
-            <p className="text-xs text-muted-foreground mb-4">Adjust font settings</p>
+            <SectionTitle title="TYPOGRAPHY" />
+            <p className="text-xs text-palette-text-secondary mb-4 px-1">Adjust font settings</p>
             <div className="space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <Label htmlFor="fontFamily" className="text-xs font-medium whitespace-nowrap">
@@ -251,8 +276,10 @@ export function SettingsPanel({
 
           {/* Style Section */}
           <div>
-            <h3 className="text-sm font-semibold mb-1">Style</h3>
-            <p className="text-xs text-muted-foreground mb-4">Customize visual styling</p>
+            <SectionTitle title="STYLE" />
+            <p className="text-xs text-palette-text-secondary mb-4 px-1">
+              Customize visual styling
+            </p>
             <div className="space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <Label htmlFor="borderRadius" className="text-xs font-medium whitespace-nowrap">
@@ -322,6 +349,19 @@ export function SettingsPanel({
           </div>
         </div>
       </ScrollArea>
+    </div>
+    </>
+  );
+}
+
+// Helper component for section titles
+function SectionTitle({ title }: { title: string }) {
+  return (
+    <div className="flex items-center px-1 gap-2 mb-2">
+      <label className="paragraphs-Small-Regular-Uppercase text-palette-text-secondary whitespace-nowrap">
+        {title}
+      </label>
+      <div className="h-[1px] bg-palette-border-container w-full" />
     </div>
   );
 }
