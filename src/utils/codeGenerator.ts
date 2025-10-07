@@ -1,6 +1,12 @@
-import { PlaygroundConfig } from "@/types/playground";
+/**
+ * Code Generator Utilities
+ *
+ * Generates exportable code files based on playground configuration.
+ * Used by CodeExporter component to create ready-to-use implementations
+ * of customized CopilotKit chat components.
+ */
 
-export type ExportFormat = "props" | "css" | "hybrid";
+import { PlaygroundConfig } from "@/types/playground";
 
 export interface ExportedFiles {
   component: string;

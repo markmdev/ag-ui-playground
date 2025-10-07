@@ -7,14 +7,20 @@ import {
 import { LangGraphAgent } from "@ag-ui/langgraph";
 import { NextRequest } from "next/server";
 
+/**
+ * Preview API Route
+ *
+ * This endpoint is used exclusively by the playground preview iframe.
+ * It connects to a fixed local agent for demo purposes.
+ * Users can configure different values in the UI for code export.
+ */
 export const POST = async (req: NextRequest) => {
-  // Get AG-UI URL and agent name from headers (passed from preview page)
-  const agUiUrl = req.headers.get("x-ag-ui-url") || "http://localhost:8123";
-  const agentName = req.headers.get("x-agent-name") || "sample_agent";
+  // Fixed values for preview - actual deployments use environment variables
+  const agUiUrl = "http://localhost:8123";
+  const agentName = "sample_agent";
 
   const serviceAdapter = new ExperimentalEmptyAdapter();
 
-  // Create runtime with dynamic URL
   const runtime = new CopilotRuntime({
     agents: {
       [agentName]: new LangGraphAgent({
