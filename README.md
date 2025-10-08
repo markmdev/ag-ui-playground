@@ -135,3 +135,6 @@ PORT=3001 npm run dev:ui
 ## License
 
 MIT
+
+Demo built by Mark Morgan in collaboration with CopilotKit Team.
+Mark Morgan LinkedIn: https://www.linkedin.com/in/markmdev/
