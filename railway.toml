@@ -1,0 +1,38 @@
+# Railway configuration for deploying Next.js + LangGraph agent
+
+[build]
+builder = "NIXPACKS"
+
+# Next.js Web Service
+[[services]]
+name = "web"
+source = "."
+
+[services.build]
+buildCommand = "npm install && npm run build"
+startCommand = "npm run start"
+
+[services.healthcheck]
+path = "/"
+timeout = 100
+interval = 30
+
+[[services.ports]]
+port = 3000
+
+# LangGraph Agent Service
+[[services]]
+name = "agent"
+source = "./agent"
+dockerfile = "agent/Dockerfile"
+
+[services.build]
+dockerfilePath = "Dockerfile"
+
+[services.healthcheck]
+path = "/"
+timeout = 100
+interval = 30
+
+[[services.ports]]
+port = 8123
