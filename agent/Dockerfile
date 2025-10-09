@@ -22,4 +22,4 @@ COPY . .
 EXPOSE 8123
 
 # Run the LangGraph CLI dev server
-CMD ["npx", "@langchain/langgraph-cli", "dev", "--port", "8123", "--no-browser", "--host", "0.0.0.0"]
+CMD ["langgraph", "dev", "--port", "8123", "--host", "0.0.0.0"]
