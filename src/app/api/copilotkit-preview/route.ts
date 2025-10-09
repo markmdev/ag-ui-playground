@@ -16,7 +16,7 @@ import { NextRequest } from "next/server";
  */
 export const POST = async (req: NextRequest) => {
   // Fixed values for preview - actual deployments use environment variables
-  const agUiUrl = process.env.NEXT_PUBLIC_AGENT_URL || "http://localhost:8123";
+  const agUiUrl = process.env.AGENT_URL || "http://localhost:8123";
   const agentName = "sample_agent";
 
   const serviceAdapter = new ExperimentalEmptyAdapter();
