@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { PlaygroundConfig } from "@/types/playground";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 
 interface PreviewPanelProps {
   config: PlaygroundConfig;
